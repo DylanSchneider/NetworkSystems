@@ -82,28 +82,18 @@ int main (int argc, char * argv[] )
         
         else if (strstr(buffer, "get ") != NULL)
         {
-            char copy[MAXBUFSIZE];
-            strcpy(copy, buffer);
-            char *cmd = strtok(copy, " ");
-            char *filename = strtok(NULL, " ");
             
             
         }
         
         else if (strstr(buffer, "put ") != NULL)
         {
-            char copy[MAXBUFSIZE];
-            strcpy(copy, buffer);
-            char *cmd = strtok(copy, " ");
-            char *filename = strtok(NULL, " ");
-            printf("MENU_OPTION:%s\n", buffer);
-            printf("cmd:%s\n", cmd);
-            printf("name:%s\n", filename);
+
         }
         
         else if (strstr(buffer, "delete ") != NULL)
         {
-            char *cmd = strtok(copy, " ");
+            char *cmd = strtok(buffer, " ");
             char *filename = strtok(NULL, " ");
             
             char *msg
