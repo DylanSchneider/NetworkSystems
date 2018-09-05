@@ -98,11 +98,11 @@ int main (int argc, char * argv[] )
             
             int delete = unlink(filename);
             if (delete == 0){
-                char *msg[] = "Successfully deleted ";
+                char msg[] = "Successfully deleted ";
                 strcat(msg, filename);
             }
             else {
-                char *msg[] = "Failed to delete ";
+                char msg[] = "Failed to delete ";
                 strcat(msg, filename);
             }
             
