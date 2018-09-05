@@ -57,8 +57,6 @@ int main (int argc, char * argv[])
 	 ******************/
     print_menu();
     for(;;) {
-
-        
         printf("> ");
         scanf(" %[^\n]", menu_option);
         
@@ -121,6 +119,7 @@ int main (int argc, char * argv[])
             printf("cmd:%s\n", cmd);
             printf("name:%s\n", filename);
         }
+        
         else if (strstr(menu_option, "delete ") != NULL)
         {
             if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
@@ -134,8 +133,6 @@ int main (int argc, char * argv[])
                 exit(1);
             }
             printf("%s\n", received);
-            close(sock);
-            exit(0);
         }
         else {
             printf("Invalid command, try again.\n");
