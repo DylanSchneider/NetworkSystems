@@ -65,6 +65,22 @@ int main (int argc, char * argv[] )
 		nbytes = recvfrom(sock, buffer, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size);
 
 		printf("The client says %s\n", buffer);
+        
+        if (strcmp("ls", buffer) == 0)
+        {
+            char msg[] = "processing ls";
+            nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
+            close(sock);
+        }
+        
+        else if (strcmp("exit", buffer) == 0)
+        {
+            char msg[] = "Exiting server...";
+            nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
+            close(sock);
+            exit(0);
+        }
+
 
 		char msg[] = "orange";
 		nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);

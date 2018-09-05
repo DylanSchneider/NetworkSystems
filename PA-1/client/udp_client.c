@@ -65,25 +65,30 @@ int main (int argc, char * argv[])
         {
             print_menu();
         }
-        else if (strcmp("ls", menu_option) == 0)
-        {
-            if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1){
-                printf("error sending message");
-                exit(1);
-            }
-            printf("sent ls\n");
-            
-            if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1){
+        else
+            if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
+            {
                 printf("error receiving message");
                 exit(1);
             }
+            printf("%s\n", received);
             
             continue;
         }
         else if (strcmp("exit", menu_option) == 0)
         {
+            if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            {
+                printf("error sending message");
+                exit(1);
+            }
+            if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
+            {
+                printf("error receiving message");
+                exit(1);
+            }
+            printf("%s\n", received);
             close(sock);
-            printf("EXITING");
             exit(0);
         }
         
