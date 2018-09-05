@@ -99,11 +99,11 @@ int main (int argc, char * argv[] )
             int delete = unlink(filename);
             char msg[MAXBUFSIZE];
             if (delete == 0){
-                msg = "Successfully deleted ";
+                strcpy(msg, "Successfully deleted ");
                 strcat(msg, filename);
             }
             else {
-                msg = "Failed to delete ";
+                strcpy(msg, "Failed to delete ");
                 strcat(msg, filename);
             }
             
