@@ -97,12 +97,13 @@ int main (int argc, char * argv[] )
             char *filename = strtok(NULL, " ");
             
             int delete = unlink(filename);
+            char msg[] = "";
             if (delete == 0){
-                char msg[] = "Successfully deleted ";
+                cmsg = "Successfully deleted ";
                 strcat(msg, filename);
             }
             else {
-                char msg[] = "Failed to delete ";
+                msg = "Failed to delete ";
                 strcat(msg, filename);
             }
             
