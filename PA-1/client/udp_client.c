@@ -68,6 +68,11 @@ int main (int argc, char * argv[])
         
         else if (strcmp("ls", menu_option) == 0)
         {
+            if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            {
+                printf("error sending message");
+                exit(1);
+            }
             if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
             {
                 printf("error receiving message");
