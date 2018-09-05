@@ -97,9 +97,9 @@ int main (int argc, char * argv[] )
             char *filename = strtok(NULL, " ");
             
             int delete = unlink(filename);
-            char msg[] = "";
+            char msg[MAXBUFSIZE];
             if (delete == 0){
-                cmsg = "Successfully deleted ";
+                msg = "Successfully deleted ";
                 strcat(msg, filename);
             }
             else {
