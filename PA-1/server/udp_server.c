@@ -22,7 +22,7 @@ int main (int argc, char * argv[] )
 
 	int sock;                           //This will be our socket
 	struct sockaddr_in sin, remote;     //"Internet socket address structure"
-	unsigned int remote_length;         //length of the sockaddr_in structure
+	socklen_t remote_size;         //length of the sockaddr_in structure
 	int nbytes;                        //number of bytes we receive in our message
 	char buffer[MAXBUFSIZE];             //a buffer to store our received message
 	if (argc != 2)
@@ -57,17 +57,18 @@ int main (int argc, char * argv[] )
 		printf("unable to bind socket\n");
 	}
 
-	remote_length = sizeof(remote);
+	remote_size = sizeof(remote);
+	
+	for(;;) {
+		//waits for an incoming message
+		bzero(buffer,sizeof(buffer));
+		nbytes = recvfrom(sock, buffer, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size);
 
-	//waits for an incoming message
-	bzero(buffer,sizeof(buffer));
-	nbytes = nbytes = **** CALL RECVFROM() HERE ****;
+		printf("The client says %s\n", buffer);
 
-	printf("The client says %s\n", buffer);
-
-	char msg[] = "orange";
-	nbytes = **** CALL SENDTO() HERE ****;
-
+		char msg[] = "orange";
+		nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
+	}
 	close(sock);
 }
 
