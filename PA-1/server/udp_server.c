@@ -96,7 +96,6 @@ int main (int argc, char * argv[] )
             char *cmd = strtok(buffer, " ");
             char *filename = strtok(NULL, " ");
             
-            char *msg
             int delete = unlink(filename);
             if (delete == 0){
                 char *msg[] = "Successfully deleted ";
