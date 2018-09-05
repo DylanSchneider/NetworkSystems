@@ -66,18 +66,58 @@ int main (int argc, char * argv[] )
 
 		printf("The client says %s\n", buffer);
         
-        if (strcmp("ls", buffer) == 0)
+        if (strcmp(buffer, "ls") == 0)
         {
             char msg[] = "processing ls";
             nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
         }
         
-        else if (strcmp("exit", buffer) == 0)
+        else if (strcmp(buffer, "exit") == 0)
         {
             char msg[] = "Exiting server...";
             nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
             close(sock);
             exit(0);
+        }
+        
+        else if (strstr(buffer, "get ") != NULL)
+        {
+            char copy[MAXBUFSIZE];
+            strcpy(copy, buffer);
+            char *cmd = strtok(copy, " ");
+            char *filename = strtok(NULL, " ");
+            
+            
+        }
+        
+        else if (strstr(buffer, "put ") != NULL)
+        {
+            char copy[MAXBUFSIZE];
+            strcpy(copy, buffer);
+            char *cmd = strtok(copy, " ");
+            char *filename = strtok(NULL, " ");
+            printf("MENU_OPTION:%s\n", buffer);
+            printf("cmd:%s\n", cmd);
+            printf("name:%s\n", filename);
+        }
+        
+        else if (strstr(buffer, "delete ") != NULL)
+        {
+            char *cmd = strtok(copy, " ");
+            char *filename = strtok(NULL, " ");
+            
+            char *msg
+            int delete = unlink(filename);
+            if (delete == 0){
+                char *msg[] = "Successfully deleted ";
+                strcat(msg, filename);
+            }
+            else {
+                char *msg[] = "Failed to delete ";
+                strcat(msg, filename);
+            }
+            
+            nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
         }
 
 

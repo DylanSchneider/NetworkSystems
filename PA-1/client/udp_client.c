@@ -62,12 +62,12 @@ int main (int argc, char * argv[])
         printf("> ");
         scanf(" %[^\n]", menu_option);
         
-        if (strcmp("menu", menu_option) == 0)
+        if (strcmp(menu_option, "menu") == 0)
         {
             print_menu();
         }
         
-        else if (strcmp("ls", menu_option) == 0)
+        else if (strcmp(menu_option, "ls") == 0)
         {
             if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
@@ -84,7 +84,7 @@ int main (int argc, char * argv[])
             continue;
         }
         
-        else if (strcmp("exit", menu_option) == 0)
+        else if (strcmp(menu_option, "exit") == 0)
         {
             if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
@@ -107,9 +107,8 @@ int main (int argc, char * argv[])
             strcpy(copy, menu_option);
             char *cmd = strtok(copy, " ");
             char *filename = strtok(NULL, " ");
-            printf("MENU_OPTION:%s\n", menu_option);
-            printf("cmd:%s\n", cmd);
-            printf("name:%s\n", filename);
+            
+            
         }
         
         else if (strstr(menu_option, "put ") != NULL)
@@ -124,7 +123,19 @@ int main (int argc, char * argv[])
         }
         else if (strstr(menu_option, "delete ") != NULL)
         {
-            
+            if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            {
+                printf("error sending message");
+                exit(1);
+            }
+            if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
+            {
+                printf("error receiving message");
+                exit(1);
+            }
+            printf("%s\n", received);
+            close(sock);
+            exit(0);
         }
         else {
             printf("Invalid command, try again.\n");
