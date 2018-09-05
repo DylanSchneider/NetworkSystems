@@ -70,7 +70,6 @@ int main (int argc, char * argv[] )
         {
             char msg[] = "processing ls";
             nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
-            close(sock);
         }
         
         else if (strcmp("exit", buffer) == 0)
@@ -82,8 +81,6 @@ int main (int argc, char * argv[] )
         }
 
 
-		char msg[] = "orange";
-		nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
 	}
 	close(sock);
 }

@@ -22,6 +22,8 @@ int main (int argc, char * argv[])
 	int nbytes;                             // number of bytes send by sendto()
 	int sock;                               //this will be our socket
 	char buffer[MAXBUFSIZE];
+    char menu_option[MAXBUFSIZE];
+    char received[MAXBUFSIZE];
 
 	struct sockaddr_in remote;              //"Internet socket address structure"
     socklen_t remote_size = sizeof(remote);
@@ -55,8 +57,7 @@ int main (int argc, char * argv[])
 	 ******************/
     print_menu();
     for(;;) {
-        char menu_option[MAXBUFSIZE];
-        char received[MAXBUFSIZE];
+
         
         printf("> ");
         scanf(" %[^\n]", menu_option);
