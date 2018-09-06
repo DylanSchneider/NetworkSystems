@@ -95,7 +95,7 @@ int main (int argc, char * argv[] )
             }
             
             char lines[MAXBUFSIZE];
-            while ((bytes = read(file, buffer, MAXBUFSIZE)) > 0)
+            while ((bytes = fread(file, buffer, MAXBUFSIZE)) > 0)
             {
                 sendto(sock, lines, bytes, 0, (struct sockaddr*) &remote, remote_size);
                 
