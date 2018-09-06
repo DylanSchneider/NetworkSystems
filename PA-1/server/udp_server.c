@@ -82,6 +82,19 @@ int main (int argc, char * argv[] )
         
         else if (strstr(buffer, "get ") != NULL)
         {
+            char *cmd = strtok(buffer, " ");
+            char *filename = strtok(NULL, " ");
+            
+            if (fopen(filename) == NULL)
+            {
+                printf("Unable to open %s\n", filename);
+                continue;
+            }
+            while ((bytes = read(fp, fileBuffer, MAXBUFSIZE)) > 0)
+            {
+                sendto(sock, fileBuffer, bytes, 0, (struct sockaddr*) &remote, rSize);
+                
+            }
             
             
         }
