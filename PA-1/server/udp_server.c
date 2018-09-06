@@ -88,7 +88,7 @@ int main (int argc, char * argv[] )
             int file;
             int bytes;
             
-            if ((file = open(filename, "r")) == NULL)
+            if ((file = open(filename, O_RDONLY)) < 0)
             {
                 printf("Unable to open %s\n", filename);
                 continue;
