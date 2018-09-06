@@ -85,17 +85,17 @@ int main (int argc, char * argv[] )
             char *cmd = strtok(buffer, " ");
             char *filename = strtok(NULL, " ");
             
-            FILE* file;
+            int file;
             int bytes;
             
-            if ((file = fopen(filename, "r")) == NULL)
+            if ((file = open(filename, "r")) == NULL)
             {
                 printf("Unable to open %s\n", filename);
                 continue;
             }
             
             char lines[MAXBUFSIZE];
-            while ((bytes = fread(file, buffer, MAXBUFSIZE)) > 0)
+            while ((bytes = read(file, buffer, MAXBUFSIZE)) > 0)
             {
                 sendto(sock, lines, bytes, 0, (struct sockaddr*) &remote, remote_size);
                 
