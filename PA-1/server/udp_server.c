@@ -93,9 +93,11 @@ int main (int argc, char * argv[] )
                 printf("Unable to open %s\n", filename);
                 continue;
             }
-            while ((bytes = read(fp, fileBuffer, MAXBUFSIZE)) > 0)
+            
+            char lines[MAXBUFSIZE];
+            while ((bytes = read(file, buffer, MAXBUFSIZE)) > 0)
             {
-                sendto(sock, fileBuffer, bytes, 0, (struct sockaddr*) &remote, rSize);
+                sendto(sock, lines, bytes, 0, (struct sockaddr*) &remote, remote_size);
                 
             }
             
