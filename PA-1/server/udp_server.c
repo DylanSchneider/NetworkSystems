@@ -85,7 +85,10 @@ int main (int argc, char * argv[] )
             char *cmd = strtok(buffer, " ");
             char *filename = strtok(NULL, " ");
             
-            if ((FILE* file = fopen(filename, "r")) == NULL)
+            FILE* file;
+            int bytes;
+            
+            if ((file = fopen(filename, "r")) == NULL)
             {
                 printf("Unable to open %s\n", filename);
                 continue;
