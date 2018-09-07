@@ -82,7 +82,12 @@ int main (int argc, char * argv[])
                 printf("%s\n", received);
                 
                 if (is_eof(received, MAXBUFSIZE)) {
+                    printf("broke on line: %s\n", received);
                     break;
+                }
+                
+                for (int i=0, i<MAXBUFSIZE; i++) {
+                    received[i] = '\0';
                 }
             }
             
@@ -184,6 +189,7 @@ void print_menu(){
 int is_eof(char* buffer, int size) {
     int i;
     for (i=0; i<size; i++) {
+        printf("b[%d]: %c\n", i, buffer[i]);
         if (buffer[i] == EOF) {
             return 1;
         }
