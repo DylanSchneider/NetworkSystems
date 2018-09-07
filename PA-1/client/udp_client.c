@@ -15,6 +15,7 @@
 #define MAXBUFSIZE 100
 
 void print_menu();
+int is_eof(char* buffer, int size);
 
 int main (int argc, char * argv[])
 {
@@ -80,7 +81,7 @@ int main (int argc, char * argv[])
                 }
                 printf("%s\n", received);
                 
-                if (recvfile(received, MAXBUFSIZE)) {
+                if (is_eof(received, MAXBUFSIZE)) {
                     break;
                 }
             }
@@ -178,5 +179,15 @@ void print_menu(){
     printf("delete <filename> \n");
     printf("ls \n");
     printf("exit\n\n");
+}
+
+int is_eof(char* buffer, int size) {
+    int i;
+    for (i=0; i<size, i++) {
+        if (buffer[i] == EOF) {
+            return 1;
+        }
+    }
+    return 0;
 }
 
