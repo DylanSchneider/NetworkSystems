@@ -81,7 +81,7 @@ int main (int argc, char * argv[])
                 }
                 printf("%s\n", received);
                 
-                if (is_eof(received, MAXBUFSIZE)) {
+                if (received == NULL) {
                     printf("broke on line: %s\n", received);
                     break;
                 }

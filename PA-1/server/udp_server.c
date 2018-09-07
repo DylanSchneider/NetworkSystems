@@ -80,7 +80,7 @@ int main (int argc, char * argv[] )
             while (fgets(output, sizeof(output)-1, fp) != NULL) {
                 nbytes = sendto(sock, output, sizeof(output), 0, (struct sockaddr*) &remote, remote_size);
             }
-            nbytes = sendto(sock, EOF, sizeof(EOF), 0, (struct sockaddr*) &remote, remote_size);
+            nbytes = sendto(sock, NULL, sizeof(NULL), 0, (struct sockaddr*) &remote, remote_size);
             
         }
         
