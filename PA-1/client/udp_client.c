@@ -81,7 +81,7 @@ int main (int argc, char * argv[])
                 }
                 printf("%s\n", received);
                 
-                if (received == NULL) {
+                if (strcmp(received, "-1")) {
                     printf("broke on line: %s\n", received);
                     break;
                 }
@@ -184,18 +184,5 @@ void print_menu(){
     printf("delete <filename> \n");
     printf("ls \n");
     printf("exit\n\n");
-}
-
-int is_eof(char* buffer, int size) {
-    int i;
-    for (i=0; i<size; i++) {
-        printf("b[%d]: %c\n", i, buffer[i]);
-        if (buffer[i] == EOF) {
-            printf("\n\n\n");
-            return 1;
-        }
-    }
-    printf("\n\n\n");
-    return 0;
 }
 
