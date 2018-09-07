@@ -68,8 +68,19 @@ int main (int argc, char * argv[] )
         
         if (strcmp(buffer, "ls") == 0)
         {
-            char msg[] = "processing ls";
-            nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
+            FILE *fp;
+            char output[1035];
+            
+            if ((fp = popen("/bin/ls", "r")) == NULL)
+            {
+                printf("Failed to run ls.\n" );
+                exit(1);
+            }
+            
+            while (fgets(output, sizeof(output)-1, fp) != NULL) {
+                nbytes = sendto(sock, output, sizeof(output), 0, (struct sockaddr*) &remote, remote_size);
+            }
+            
         }
         
         else if (strcmp(buffer, "exit") == 0)
