@@ -183,7 +183,7 @@ void print_menu(){
 
 int is_eof(char* buffer, int size) {
     int i;
-    for (i=0; i<size, i++) {
+    for (i=0; i<size; i++) {
         if (buffer[i] == EOF) {
             return 1;
         }
