@@ -68,24 +68,24 @@ int main (int argc, char * argv[])
         
         else if (strcmp(menu_option, "ls") == 0)
         {
-            if (sendto(sock, menu_option, MAXBUFSIZE, 0, (struct sockaddr*) &remote, remote_size) == -1)
+            if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message");
                 exit(1);
             }
             for (;;){
-                if (recvfrom(sock, received, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size) == -1)
+                if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
                 {
                     printf("error receiving message");
                     exit(1);
                 }
-                printf("%s\n", received);
                 
-                if (strcmp(received, "-1")) {
-                    printf("broke on line: %s\n", received);
+                //if (strcmp(received, "-1") == 0)
+                if (is_eof(received, sizeof(received)))
+                {
                     break;
                 }
-                
+                printf("%s", received);
                 for (int i=0; i<MAXBUFSIZE; i++) {
                     received[i] = '\0';
                 }
@@ -176,7 +176,8 @@ int main (int argc, char * argv[])
 
 }
 
-void print_menu(){
+void print_menu()
+{
     printf("Welcome to the Basic UDP Client. Valid commands are:\n");
     printf("menu - show list of client commands\n");
     printf("get <filename> - get the file from the server\n");
@@ -184,5 +185,18 @@ void print_menu(){
     printf("delete <filename> \n");
     printf("ls \n");
     printf("exit\n\n");
+}
+
+int is_eof(char* buffer, int size)
+{
+    int i;
+    for (i=0; i<size; i++)
+    {
+        if (buffer[i] == EOF)
+        {
+            return 1;
+        }
+    }
+    return 0;
 }
 
