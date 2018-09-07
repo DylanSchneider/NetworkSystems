@@ -56,7 +56,7 @@ int main (int argc, char * argv[])
 	  however, with UDP, there is no error if the message is lost in the network once it leaves the computer.
 	 ******************/
     print_menu();
-    for(;;) {
+    for (;;) {
         printf("> ");
         scanf(" %[^\n]", menu_option);
         
@@ -67,17 +67,23 @@ int main (int argc, char * argv[])
         
         else if (strcmp(menu_option, "ls") == 0)
         {
-            if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            if (sendto(sock, menu_option, MAXBUFSIZE, 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message");
                 exit(1);
             }
-            if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
-            {
-                printf("error receiving message");
-                exit(1);
+            for (;;){
+                if (recvfrom(sock, received, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size) == -1)
+                {
+                    printf("error receiving message");
+                    exit(1);
+                }
+                printf("%s\n", received);
+                
+                if (recvfile(received, MAXBUFSIZE)) {
+                    break;
+                }
             }
-            printf("%s\n", received);
             
             continue;
         }
@@ -105,7 +111,7 @@ int main (int argc, char * argv[])
             strcpy(copy, menu_option);
             char *cmd = strtok(copy, " ");
             char *filename = strtok(NULL, " ");
-            s
+            
             if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message");
