@@ -62,7 +62,6 @@ int main (int argc, char * argv[] )
 	remote_size = sizeof(remote);
 	
 	for(;;) {
-		//waits for an incoming message
 		bzero(buffer,sizeof(buffer));
 		nbytes = recvfrom(sock, buffer, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size);
 
@@ -134,7 +133,7 @@ int main (int argc, char * argv[] )
             char *filename = strtok(NULL, " ");
 
             int file;
-            if ((file = open(filename, O_WRONLY|O_CREAT)) < 0)
+            if ((file = open(filename, O_RDWR|O_CREAT)) < 0)
             {
                 char msg[MAXBUFSIZE];
                 strcpy(msg, "Could not open ");
