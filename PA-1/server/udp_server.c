@@ -56,6 +56,7 @@ int main (int argc, char * argv[] )
 	if (bind(sock, (struct sockaddr *)&sin, sizeof(sin)) < 0)
 	{
 		printf("unable to bind socket\n");
+        exit(1);
 	}
 
 	remote_size = sizeof(remote);
