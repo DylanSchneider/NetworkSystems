@@ -58,6 +58,8 @@ int main (int argc, char * argv[] )
 		printf("unable to bind socket\n");
         exit(1);
 	}
+    
+    printf("Started server on port %s\n", argv[1]);s
 
 	remote_size = sizeof(remote);
 	

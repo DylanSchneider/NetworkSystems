@@ -50,12 +50,6 @@ int main (int argc, char * argv[])
 	{
 		printf("unable to create socket");
 	}
-
-	/******************
-	  sendto() sends immediately.  
-	  it will report an error if the message fails to leave the computer
-	  however, with UDP, there is no error if the message is lost in the network once it leaves the computer.
-	 ******************/
     print_menu();
     for (;;) {
         
@@ -204,22 +198,7 @@ int main (int argc, char * argv[])
         else {
             printf("Invalid command, try again.\n");
         }
-        
     }
-    
-    
-    /*
-	char command[] = "apple";	
-	nbytes = **** CALL SENDTO() HERE ****;
-
-	// Blocks till bytes are received
-	struct sockaddr_in from_addr;
-	int addr_length = sizeof(struct sockaddr);
-	bzero(buffer,sizeof(buffer));
-	nbytes = **** CALL RECVFROM() HERE ****;  
-
-	printf("Server says %s\n", buffer);
-*/
 	close(sock);
     return 0;
 
