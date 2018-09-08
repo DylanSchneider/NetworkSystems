@@ -103,7 +103,8 @@ int main (int argc, char * argv[] )
             
             if ((file = open(filename, O_RDONLY)) < 0)
             {
-                char msg[] = "Unable to open ";
+                char msg[MAXBUFSIZE];
+                strcpy(msg, "Unable to open ");
                 strcat(msg, filename);
                 sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
                 continue;
