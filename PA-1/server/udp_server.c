@@ -114,6 +114,7 @@ int main (int argc, char * argv[] )
             char lines[MAXBUFSIZE];
             while ((bytes = read(file, buffer, MAXBUFSIZE)) > 0)
             {
+                printf("sending line\n");
                 sendto(sock, lines, bytes, 0, (struct sockaddr*) &remote, remote_size);
             }
             

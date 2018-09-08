@@ -115,7 +115,6 @@ int main (int argc, char * argv[])
             strcpy(copy, menu_option);
             char *cmd = strtok(copy, " ");
             char *filename = strtok(NULL, " ");
-            printf("FILE: %s\n", filename);
             if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message");
@@ -133,11 +132,11 @@ int main (int argc, char * argv[])
                     printf("HI%s\n", received);
                     break;
                 }
-                /*else if (is_eof(received, sizeof(received)) == 0)
+                else if (is_eof(received, sizeof(received)) == 0)
                 {
                     printf("hit eof: %s\n", received);
                     break;
-                }*/
+                }
                 printf("%s", received);
                 
             }
@@ -174,12 +173,12 @@ int main (int argc, char * argv[])
         }
         
         
-        printf("\n\nEND LOOP1: %s\n\n", received);
+        printf("\n\nEND LOOP1: %s\n", received);
         
         for (int i=0; i<MAXBUFSIZE; i++) {
             received[i] = '\0';
         }
-        printf("\n\nEND LOOP2: %s\n\n", received);
+        printf("END LOOP2: %s\n\n", received);
         
     }
     
