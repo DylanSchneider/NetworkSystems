@@ -149,6 +149,7 @@ int main (int argc, char * argv[] )
             
             nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
         }
+        printf("\n");
 
 
 	}
