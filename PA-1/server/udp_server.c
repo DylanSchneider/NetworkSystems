@@ -120,7 +120,6 @@ int main (int argc, char * argv[] )
             }
             char msg[] = "-1";
             nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
-            printf("sent -1\n");
             close(file);
         }
         

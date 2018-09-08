@@ -126,8 +126,8 @@ int main (int argc, char * argv[])
                 printf("error sending message");
                 exit(1);
             }
-            FILE* file;
-            if ((file = fopen(filename, "w")) < 0)
+            int file;
+            if ((file = open(filename, O_WRONLY|O_CREAT)) < 0)
             {
                 printf("couldnt open %s for writing.\n", filename);
                 continue;
@@ -139,7 +139,7 @@ int main (int argc, char * argv[])
                     printf("error receiving message");
                     exit(1);
                 }
-                fwrite(received, 1, sizeof(received), file);
+                write(file, received, sizeof(received));
                 if (strstr(received, "Unable to open") != NULL)
                 {
                     printf("unable\n");
@@ -147,12 +147,11 @@ int main (int argc, char * argv[])
                 }
                 else if (strcmp(received, "-1") == 0)
                 {
-                    printf("eof\n");
                     break;
                 }
                 
             }
-            fclose(file);
+            close(file);
             
         }
         
