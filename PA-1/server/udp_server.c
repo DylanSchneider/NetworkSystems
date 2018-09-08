@@ -103,6 +103,7 @@ int main (int argc, char * argv[] )
             
             if ((file = open(filename, O_RDONLY)) < 0)
             {
+                printf("couldnt open %s\n", filename);
                 char msg[MAXBUFSIZE];
                 strcpy(msg, "Unable to open ");
                 strcat(msg, filename);

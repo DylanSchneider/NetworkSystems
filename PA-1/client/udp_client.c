@@ -90,8 +90,6 @@ int main (int argc, char * argv[])
                     received[i] = '\0';
                 }
             }
-            
-            continue;
         }
         
         else if (strcmp(menu_option, "exit") == 0)
@@ -117,7 +115,7 @@ int main (int argc, char * argv[])
             strcpy(copy, menu_option);
             char *cmd = strtok(copy, " ");
             char *filename = strtok(NULL, " ");
-            
+            printf("FILE: %s\n", filename);
             if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message");
@@ -130,21 +128,18 @@ int main (int argc, char * argv[])
                     printf("error receiving message");
                     exit(1);
                 }
-                
-                if (is_eof(received, sizeof(received)) == 0)
-                {
-                    printf("hit eof\n");
-                    break;
-                }
-                else if (strstr(received, "Unable to open") != NULL)
+                if (strstr(received, "Unable to open") != NULL)
                 {
                     printf("HI%s\n", received);
                     break;
                 }
+                /*else if (is_eof(received, sizeof(received)) == 0)
+                {
+                    printf("hit eof: %s\n", received);
+                    break;
+                }*/
                 printf("%s", received);
-                for (int i=0; i<MAXBUFSIZE; i++) {
-                    received[i] = '\0';
-                }
+                
             }
             
         }
@@ -178,6 +173,14 @@ int main (int argc, char * argv[])
             printf("Invalid command, try again.\n");
         }
         
+        
+        printf("\n\nEND LOOP1: %s\n\n", received);
+        
+        for (int i=0; i<MAXBUFSIZE; i++) {
+            received[i] = '\0';
+        }
+        printf("\n\nEND LOOP2: %s\n\n", received);
+        
     }
     
     
@@ -194,7 +197,7 @@ int main (int argc, char * argv[])
 	printf("Server says %s\n", buffer);
 */
 	close(sock);
-    
+    return 0;
 
 }
 
