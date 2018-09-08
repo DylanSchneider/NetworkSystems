@@ -73,7 +73,8 @@ int main (int argc, char * argv[])
                 printf("error sending message");
                 exit(1);
             }
-            for (;;){
+            for (;;)
+            {
                 if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
                 {
                     printf("error receiving message");
@@ -122,7 +123,29 @@ int main (int argc, char * argv[])
                 printf("error sending message");
                 exit(1);
             }
-            
+            for (;;)
+            {
+                if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
+                {
+                    printf("error receiving message");
+                    exit(1);
+                }
+                
+                if (is_eof(received, sizeof(received)) == 0)
+                {
+                    printf("hit eof\n");
+                    break;
+                }
+                else if (strstr(received, "Unable to open") != NULL)
+                {
+                    printf("HI%s\n", received);
+                    break;
+                }
+                printf("%s", received);
+                for (int i=0; i<MAXBUFSIZE; i++) {
+                    received[i] = '\0';
+                }
+            }
             
         }
         
