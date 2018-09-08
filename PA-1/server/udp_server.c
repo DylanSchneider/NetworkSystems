@@ -45,6 +45,7 @@ int main (int argc, char * argv[] )
 	if ((sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
 	{
 		printf("unable to create socket");
+        exit(1);
 	}
 
 
