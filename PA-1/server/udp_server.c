@@ -118,8 +118,9 @@ int main (int argc, char * argv[] )
                 sendto(sock, buf, bytes, 0, (struct sockaddr*) &remote, remote_size);
                 printf("Bytes: %d\n", bytes);
             }
-            
-            
+            char msg[] = "-1";
+            nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
+            printf("sent -1\n");
         }
         
         else if (strstr(buffer, "put ") != NULL)
