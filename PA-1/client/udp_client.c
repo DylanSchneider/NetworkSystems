@@ -129,15 +129,13 @@ int main (int argc, char * argv[])
                 }
                 if (strstr(received, "Unable to open") != NULL)
                 {
-                    printf("HI%s\n", received);
                     break;
                 }
-                else if (is_eof(received, sizeof(received)) == 0)
+                /*else if (is_eof(received, sizeof(received)) == 0)
                 {
-                    printf("hit eof: %s\n", received);
                     break;
-                }
-                printf("%s", received);
+                }*/
+                printf("LINE: %s", received);
                 
             }
             
@@ -172,13 +170,9 @@ int main (int argc, char * argv[])
             printf("Invalid command, try again.\n");
         }
         
-        
-        printf("\n\nEND LOOP1: %s\n", received);
-        
         for (int i=0; i<MAXBUFSIZE; i++) {
             received[i] = '\0';
         }
-        printf("END LOOP2: %s\n\n", received);
         
     }
     

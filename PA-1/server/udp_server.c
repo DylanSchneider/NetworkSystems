@@ -111,11 +111,11 @@ int main (int argc, char * argv[] )
                 continue;
             }
             
-            char lines[MAXBUFSIZE];
-            while ((bytes = read(file, lines, MAXBUFSIZE)) > 0)
+            char line[MAXBUFSIZE];
+            while ((bytes = read(file, line, MAXBUFSIZE)) > 0)
             {
-                printf("sending line\n");
-                sendto(sock, lines, bytes, 0, (struct sockaddr*) &remote, remote_size);
+                printf("sending line: %s\n", line);
+                sendto(sock, line, bytes, 0, (struct sockaddr*) &remote, remote_size);
             }
             
             
