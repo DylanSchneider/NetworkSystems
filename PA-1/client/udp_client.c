@@ -139,7 +139,7 @@ int main (int argc, char * argv[])
                     printf("error receiving message");
                     exit(1);
                 }
-                printf("%s", received);
+                fwrite(received, 1, sizeof(received), file);
                 if (strstr(received, "Unable to open") != NULL)
                 {
                     printf("unable\n");
@@ -152,6 +152,7 @@ int main (int argc, char * argv[])
                 }
                 
             }
+            fclose(file);
             
         }
         
