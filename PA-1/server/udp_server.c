@@ -103,7 +103,9 @@ int main (int argc, char * argv[] )
             
             if ((file = open(filename, O_RDONLY)) < 0)
             {
-                printf("Unable to open %s\n", filename);
+                char msg[] = "Unable to open ";
+                strcat(msg, filename);
+                sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
                 continue;
             }
             
