@@ -138,10 +138,12 @@ int main (int argc, char * argv[] )
             {
                 char msg[MAXBUFSIZE];
                 strcpy(msg, "Could not open ");
-                strcat(msg, filename)
+                strcat(msg, filename);
                 nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
                 continue;
             }
+            
+            char received[MAXBUFSIZE];
             for (;;)
             {
                 if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
