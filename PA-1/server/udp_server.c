@@ -100,7 +100,7 @@ int main (int argc, char * argv[] )
             
             int file;
             int bytes;
-            
+            printf("Attempting to open %s\n", filename);
             if ((file = open(filename, O_RDONLY)) < 0)
             {
                 printf("couldnt open %s\n", filename);
