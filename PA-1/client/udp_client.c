@@ -135,7 +135,7 @@ int main (int argc, char * argv[])
                 {
                     break;
                 }*/
-                printf("LINE: %s", received);
+                printf("%s", received);
                 
             }
             
