@@ -98,10 +98,10 @@ int main (int argc, char * argv[] )
             char *cmd = strtok(buffer, " ");
             char *filename = strtok(NULL, " ");
             
-            int file;
+            FILE* file;
             int bytes;
             printf("Attempting to open %s\n", filename);
-            if ((file = open(filename, O_RDONLY)) < 0)
+            if ((file = fopen(filename, "r")) < 0)
             {
                 printf("couldnt open %s\n", filename);
                 char msg[MAXBUFSIZE];
@@ -112,7 +112,7 @@ int main (int argc, char * argv[] )
             }
             
             char bytes_read[MAXBUFSIZE];
-            while ((bytes = read(file, bytes_read, MAXBUFSIZE)) > 0)
+            while ((bytes = fread(bytes_read, sizeof(bytes_read), MAXBUFSIZE, file)) > 0)
             {
                 //printf("sending line: %s\n", bytes_read);
                 sendto(sock, bytes_read, bytes, 0, (struct sockaddr*) &remote, remote_size);

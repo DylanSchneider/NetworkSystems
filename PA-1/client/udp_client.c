@@ -58,6 +58,11 @@ int main (int argc, char * argv[])
 	 ******************/
     print_menu();
     for (;;) {
+        
+        for (int i=0; i<MAXBUFSIZE; i++) {
+            received[i] = '\0';
+        }
+        
         printf("> ");
         scanf(" %[^\n]", menu_option);
         
@@ -115,10 +120,17 @@ int main (int argc, char * argv[])
             strcpy(copy, menu_option);
             char *cmd = strtok(copy, " ");
             char *filename = strtok(NULL, " ");
+            
             if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message");
                 exit(1);
+            }
+            FILE* file;
+            if ((file = fopen(filename, "w")) < 0)
+            {
+                printf("couldnt open %s for writing.\n", filename);
+                continue;
             }
             for (;;)
             {
@@ -168,10 +180,6 @@ int main (int argc, char * argv[])
         }
         else {
             printf("Invalid command, try again.\n");
-        }
-        
-        for (int i=0; i<MAXBUFSIZE; i++) {
-            received[i] = '\0';
         }
         
     }
