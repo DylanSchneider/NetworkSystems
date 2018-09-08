@@ -160,9 +160,32 @@ int main (int argc, char * argv[])
             strcpy(copy, menu_option);
             char *cmd = strtok(copy, " ");
             char *filename = strtok(NULL, " ");
-            printf("MENU_OPTION:%s\n", menu_option);
-            printf("cmd:%s\n", cmd);
-            printf("name:%s\n", filename);
+            
+            int file;
+            int bytes;
+            printf("Attempting to open %s\n", filename);
+            if ((file = open(filename, O_RDONLY)) < 0)
+            {
+                printf("Unable to open %s\n", filename);
+                continue;
+            }
+            
+            if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            {
+                printf("error sending message");
+                exit(1);
+            }
+            
+            char buf[MAXBUFSIZE];
+            while ((bytes = read(file, buf, MAXBUFSIZE)) > 0)
+            {
+                sendto(sock, buf, bytes, 0, (struct sockaddr*) &remote, remote_size);
+                printf("\tSent %d bytes\n", bytes);
+            }
+            printf("Done sending %s\n", filename);
+            char msg[] = "-1";
+            nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
+            close(file);
         }
         
         else if (strstr(menu_option, "delete ") != NULL)

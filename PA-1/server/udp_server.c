@@ -128,7 +128,34 @@ int main (int argc, char * argv[] )
         
         else if (strstr(buffer, "put ") != NULL)
         {
+            char copy[MAXBUFSIZE];
+            strcpy(copy, buffer);
+            char *cmd = strtok(copy, " ");
+            char *filename = strtok(NULL, " ");
 
+            int file;
+            if ((file = open(filename, O_WRONLY|O_CREAT)) < 0)
+            {
+                char msg[MAXBUFSIZE];
+                strcpy(msg, "Could not open ");
+                strcat(msg, filename)
+                nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
+                continue;
+            }
+            for (;;)
+            {
+                if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
+                {
+                    printf("error receiving message");
+                    exit(1);
+                }
+                else if (strcmp(received, "-1") == 0)
+                {
+                    break;
+                }
+                write(file, received, sizeof(received));
+            }
+            close(file);
         }
         
         else if (strstr(buffer, "delete ") != NULL)
