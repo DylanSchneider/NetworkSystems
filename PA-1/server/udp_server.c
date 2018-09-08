@@ -114,7 +114,7 @@ int main (int argc, char * argv[] )
             char buf[MAXBUFSIZE];
             while ((bytes = fread(buf, sizeof(buf), MAXBUFSIZE, file)) > 0)
             {
-                //printf("sending line: %s\n", bytes_read);
+                printf("sending line: %s\n", buf);
                 sendto(sock, buf, bytes, 0, (struct sockaddr*) &remote, remote_size);
                 printf("Bytes: %d\n", bytes);
             }
