@@ -59,7 +59,7 @@ int main (int argc, char * argv[] )
         exit(1);
 	}
     
-    printf("Started server on port %s\n", argv[1]);s
+    printf("Started server on port %s\n", argv[1]);
 
 	remote_size = sizeof(remote);
 	
