@@ -110,7 +110,6 @@ int main (int argc, char * argv[] )
                 strcpy(err_msg, "Unable to open ");
                 strcat(err_msg, filename);
                 sendto(sock, err_msg, sizeof(err_msg), 0, (struct sockaddr*) &remote, remote_size);
-                printf("Unable to open %s\n", filename);
                 continue;
             }
             
