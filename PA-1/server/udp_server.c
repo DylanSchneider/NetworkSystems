@@ -106,11 +106,11 @@ int main (int argc, char * argv[] )
             printf("Attempting to open %s\n", filename);
             if ((file = open(filename, O_RDONLY)) < 0)
             {
-                printf("Unable to open %s\n", filename);
-                char msg[MAXBUFSIZE];
-                strcpy(msg, "Unable to open ");
-                strcat(msg, filename);
-                sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
+                printf("HERROREROUnable to open %s\n", filename);
+                char err_msg[MAXBUFSIZE];
+                strcpy(err_msg, "Unable to open ");
+                strcat(err_msg, filename);
+                sendto(sock, err_msg, sizeof(err_msg), 0, (struct sockaddr*) &remote, remote_size);
                 continue;
             }
             
