@@ -62,6 +62,10 @@ int main (int argc, char * argv[])
         printf("> ");
         scanf(" %[^\n]", menu_option);
         
+        if (strcmp(menu_option, "/n") == 0)
+        {
+            continue;
+        }
         if (strcmp(menu_option, "menu") == 0)
         {
             print_menu();
