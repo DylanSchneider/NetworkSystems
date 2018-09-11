@@ -50,6 +50,8 @@ int main (int argc, char * argv[])
 	{
 		printf("unable to create socket");
 	}
+    
+    printf("Client started with connection to %s on port %s\n", argv[1], argv[2]);
     print_menu();
     for (;;) {
         
@@ -206,13 +208,15 @@ int main (int argc, char * argv[])
 
 void print_menu()
 {
-    printf("Welcome to the Basic UDP Client. Valid commands are:\n");
+    printf("Command Menu");
+    printf("****************************************************\n");
     printf("menu - show list of client commands\n");
     printf("get <filename> - get the file from the server\n");
     printf("put <filename> - put the file on the server\n");
     printf("delete <filename> \n");
     printf("ls \n");
-    printf("exit\n\n");
+    printf("exit\n");
+    printf("****************************************************\n");
 }
 
 int is_eof(char* buffer, int size)
