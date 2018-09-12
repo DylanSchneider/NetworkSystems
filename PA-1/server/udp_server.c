@@ -108,7 +108,7 @@ int main (int argc, char * argv[] )
             char begin_msg[MAXBUFSIZE];
             if ((file = open(filename, O_RDONLY)) < 0)
             {
-                strcpy(begin)_msg, "Unable to open ");
+                strcpy(begin_msg), "Unable to open ");
                 strcat(begin_msg, filename);
                 printf("Unable to open %s, moving on.\n", filename);
                 continue;
