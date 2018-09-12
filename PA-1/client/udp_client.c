@@ -15,7 +15,6 @@
 #define MAXBUFSIZE 100
 
 void print_menu();
-int is_eof(char* buffer, int size);
 
 int main (int argc, char * argv[])
 {
@@ -241,17 +240,3 @@ void print_menu()
     printf("exit\n");
     printf("****************************************************\n");
 }
-
-int is_eof(char* buffer, int size)
-{
-    int i;
-    for (i=0; i<size; i++)
-    {
-        if (buffer[i] == EOF)
-        {
-            return 1;
-        }
-    }
-    return 0;
-}
-
