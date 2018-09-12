@@ -111,14 +111,16 @@ int main (int argc, char * argv[] )
                 strcpy(begin_msg, "Unable to open ");
                 strcat(begin_msg, filename);
                 printf("Unable to open %s, moving on.\n", filename);
+                nbytes = sendto(sock, begin_msg, sizeof(begin_msg), 0, (struct sockaddr*) &remote, remote_size);
                 continue;
             }
             else{
                 strcpy(begin_msg, "Successfully opened ");
                 strcat(begin_msg, filename);
                 printf("Successfully opened %s, sending...\n", filename);
+                nbytes = sendto(sock, begin_msg, sizeof(begin_msg), 0, (struct sockaddr*) &remote, remote_size);
             }
-            nbytes = sendto(sock, begin_msg, sizeof(begin_msg), 0, (struct sockaddr*) &remote, remote_size);
+            
             
             char buf[MAXBUFSIZE];
             while ((bytes = read(file, buf, MAXBUFSIZE)) > 0)
