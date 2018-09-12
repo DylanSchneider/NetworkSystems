@@ -149,9 +149,10 @@ int main (int argc, char * argv[])
             {
                 continue;
             }
+            printf("receiving...\n");
             
             int file;
-            if ((file = open(filename, O_RDWR|O_CREAT)) < 0)
+            if ((file = open(filename, O_RDWR|O_CREAT, 0755)) < 0)
             {
                 printf("couldnt open %s for writing.\n", filename);
                 continue;

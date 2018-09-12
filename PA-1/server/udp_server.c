@@ -142,7 +142,7 @@ int main (int argc, char * argv[] )
             char *filename = strtok(NULL, " ");
 
             int file;
-            if ((file = open(filename, O_RDWR|O_CREAT)) < 0)
+            if ((file = open(filename, O_RDWR|O_CREAT, 0755)) < 0)
             {
                 char msg[MAXBUFSIZE];
                 strcpy(msg, "Could not open ");
