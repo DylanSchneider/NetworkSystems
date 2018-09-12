@@ -178,6 +178,11 @@ int main (int argc, char * argv[])
             strcpy(copy, menu_option);
             char *cmd = strtok(copy, " ");
             char *filename = strtok(NULL, " ");
+            if (filename == NULL)
+            {
+                printf("Must provide a filename\n");
+                continue;
+            }
             
             int file;
             int bytes;
@@ -207,6 +212,16 @@ int main (int argc, char * argv[])
         
         else if (strstr(menu_option, "delete ") != NULL)
         {
+            char copy[MAXBUFSIZE];
+            strcpy(copy, menu_option);
+            char *cmd = strtok(copy, " ");
+            char *filename = strtok(NULL, " ");
+            if (filename == NULL)
+            {
+                printf("Must provide a filename\n");
+                continue;
+            }
+            
             if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message");
