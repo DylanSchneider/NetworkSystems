@@ -104,15 +104,21 @@ int main (int argc, char * argv[] )
             int file;
             int bytes;
             printf("Attempting to open %s\n", filename);
+            
+            char begin_msg[MAXBUFSIZE];
             if ((file = open(filename, O_RDONLY)) < 0)
             {
-                char err_msg[MAXBUFSIZE];
-                strcpy(err_msg, "Unable to open ");
-                strcat(err_msg, filename);
-                sendto(sock, err_msg, sizeof(err_msg), 0, (struct sockaddr*) &remote, remote_size);
-                printf("%s\n", err_msg);
+                strcpy(begin)_msg, "Unable to open ");
+                strcat(begin_msg, filename);
+                printf("Unable to open %s, moving on.\n", filename);
                 continue;
             }
+            else{
+                strcpy(begin_msg, "Successfully opened ");
+                strcat(begin_msg, filename);
+                printf("Successfully opened %s, sending...\n", filename);
+            }
+            sendto(sock, err_msg, sizeof(err_msg), 0, (struct sockaddr*) &remote, remote_size);
             
             char buf[MAXBUFSIZE];
             while ((bytes = read(file, buf, MAXBUFSIZE)) > 0)
@@ -121,8 +127,8 @@ int main (int argc, char * argv[] )
                 printf("\tSent %d bytes\n", bytes);
             }
             printf("Done sending %s\n", filename);
-            char msg[] = "-1";
-            nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
+            char eof_msg[] = "-1";
+            nbytes = sendto(sock, eof_msg, sizeof(eof_msg), 0, (struct sockaddr*) &remote, remote_size);
             close(file);
         }
         

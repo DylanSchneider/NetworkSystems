@@ -60,7 +60,12 @@ int main (int argc, char * argv[])
         }
         
         printf("> ");
-        scanf(" %[^\n]", menu_option);
+        //scanf(" %c[^\n]", menu_option);
+        fgets(menu_option, MAXBUFSIZE, stdin);
+        if ((strlen(menu_option) > 0) && (menu_option[strlen(menu_option) - 1] == '\n'))
+        {
+            menu_option[strlen (menu_option) - 1] = '\0';
+        }
         
         if (strlen(menu_option) == 0)
         {
@@ -120,12 +125,31 @@ int main (int argc, char * argv[])
             strcpy(copy, menu_option);
             char *cmd = strtok(copy, " ");
             char *filename = strtok(NULL, " ");
+            if (filename == NULL)
+            {
+                printf("Must provide a filename\n");
+                continue;
+            }
             
             if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message");
                 exit(1);
             }
+            if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
+            {
+                printf("error receiving message");
+                exit(1);
+            }
+            char err_received[MAXBUFSIZE];
+            strcpy(err_received, "Unable to open ");
+            strcat(err_received, filename);
+            if (strstr(received, err_received) != NULL)
+            {
+                printf("%s\n", received);
+                continue;
+            }
+            
             int file;
             if ((file = open(filename, O_RDWR|O_CREAT)) < 0)
             {
@@ -138,14 +162,6 @@ int main (int argc, char * argv[])
                 {
                     printf("error receiving message");
                     exit(1);
-                }
-                char err_received[MAXBUFSIZE];
-                strcpy(err_received, "Unable to open ");
-                strcat(err_received, filename);
-                if (strstr(received, err_received) != NULL)
-                {
-                    printf("%s\n", received);
-                    break;
                 }
                 else if (strcmp(received, "-1") == 0)
                 {
