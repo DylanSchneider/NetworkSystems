@@ -140,12 +140,13 @@ int main (int argc, char * argv[])
                 printf("error receiving message");
                 exit(1);
             }
+            printf("%s\n", received);
+            
             char err_received[MAXBUFSIZE];
             strcpy(err_received, "Unable to open ");
             strcat(err_received, filename);
             if (strstr(received, err_received) != NULL)
             {
-                printf("%s\n", received);
                 continue;
             }
             
