@@ -62,11 +62,11 @@ int main (int argc, char * argv[])
         printf("> ");
         scanf(" %[^\n]", menu_option);
         
-        if (strcmp(menu_option, "/n") == 0)
+        if (strlen(menu_option) == 0)
         {
             continue;
         }
-        if (strcmp(menu_option, "menu") == 0)
+        else if (strcmp(menu_option, "menu") == 0)
         {
             print_menu();
         }
@@ -215,7 +215,7 @@ int main (int argc, char * argv[])
 
 void print_menu()
 {
-    printf("Command Menu");
+    printf("Command Menu\n");
     printf("****************************************************\n");
     printf("menu - show list of client commands\n");
     printf("get <filename> - get the file from the server\n");
