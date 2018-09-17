@@ -96,9 +96,6 @@ int main (int argc, char * argv[])
                 }
                 printf("%s", received);
                 memset(received, 0, MAXBUFSIZE);
-                /*for (int i=0; i<MAXBUFSIZE; i++) {
-                    received[i] = '\0';
-                }*/
             }
             printf("\n");
         }
