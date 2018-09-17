@@ -79,14 +79,14 @@ int main (int argc, char * argv[])
         {
             if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
-                printf("error sending message");
+                printf("error sending message\n");
                 exit(1);
             }
             for (;;)
             {
                 if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
                 {
-                    printf("error receiving message");
+                    printf("error receiving message\n");
                     exit(1);
                 }
                 
@@ -107,12 +107,12 @@ int main (int argc, char * argv[])
         {
             if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
-                printf("error sending message");
+                printf("error sending message\n");
                 exit(1);
             }
             if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
             {
-                printf("error receiving message");
+                printf("error receiving message\n");
                 exit(1);
             }
             printf("%s\n", received);
@@ -135,12 +135,12 @@ int main (int argc, char * argv[])
             
             if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
-                printf("error sending message");
+                printf("error sending message\n");
                 exit(1);
             }
             if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
             {
-                printf("error receiving message");
+                printf("error receiving message\n");
                 exit(1);
             }
             printf("%s\n", received);
@@ -164,7 +164,7 @@ int main (int argc, char * argv[])
             {
                 if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
                 {
-                    printf("error receiving message");
+                    printf("error receiving message\n");
                     exit(1);
                 }
                 else if (strcmp(received, "-1") == 0)
@@ -198,7 +198,7 @@ int main (int argc, char * argv[])
             
             if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
-                printf("error sending message");
+                printf("error sending message\n");
                 exit(1);
             }
             
@@ -228,12 +228,12 @@ int main (int argc, char * argv[])
             
             if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
-                printf("error sending message");
+                printf("error sending message\n");
                 exit(1);
             }
             if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
             {
-                printf("error receiving message");
+                printf("error receiving message\n");
                 exit(1);
             }
             printf("%s\n", received);

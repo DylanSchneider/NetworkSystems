@@ -83,7 +83,7 @@ int main (int argc, char * argv[] )
             while (fgets(output, sizeof(output)-1, fp) != NULL) {
                 if (sendto(sock, output, sizeof(output), 0, (struct sockaddr*) &remote, remote_size) == -1)
                 {
-                    printf("error sending message");
+                    printf("error sending message\n");
                     exit(1);
                 }
             }
@@ -91,7 +91,7 @@ int main (int argc, char * argv[] )
             char msg[] = "-1";
             if (sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
-                printf("error sending message");
+                printf("error sending message\n");
                 exit(1);
             }
             printf("successfully sent ls\n");
@@ -102,7 +102,7 @@ int main (int argc, char * argv[] )
             char msg[] = "Exiting server";
             if (sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
-                printf("error sending message");
+                printf("error sending message\n");
                 exit(1);
             }
             printf("exiting...\n");
@@ -123,10 +123,10 @@ int main (int argc, char * argv[] )
             {
                 strcpy(begin_msg, "Unable to open ");
                 strcat(begin_msg, filename);
-                printf("Unable to open %s, moving on.\n", filename);
+                printf("Unable to open %s, moving on.\n\n", filename);
                 if (sendto(sock, begin_msg, sizeof(begin_msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
                 {
-                    printf("error sending message");
+                    printf("error sending message\n");
                     exit(1);
                 }
                 continue;
@@ -137,7 +137,7 @@ int main (int argc, char * argv[] )
                 printf("Successfully opened %s, sending...\n", filename);
                 if (sendto(sock, begin_msg, sizeof(begin_msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
                 {
-                    printf("error sending message");
+                    printf("error sending message\n");
                     exit(1);
                 }
             }
@@ -148,7 +148,7 @@ int main (int argc, char * argv[] )
             {
                 if (sendto(sock, buf, bytes, 0, (struct sockaddr*) &remote, remote_size) == -1)
                 {
-                    printf("error sending message");
+                    printf("error sending message\n");
                     exit(1);
                 }
                 printf("\tSent %d bytes\n", bytes);
@@ -156,7 +156,7 @@ int main (int argc, char * argv[] )
             char eof_msg[] = "-1";
             if (sendto(sock, eof_msg, sizeof(eof_msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
-                printf("error sending message");
+                printf("error sending message\n");
                 exit(1);
             }
             
@@ -177,7 +177,11 @@ int main (int argc, char * argv[] )
                 char msg[MAXBUFSIZE];
                 strcpy(msg, "Could not open ");
                 strcat(msg, filename);
-                nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
+                if (sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
+                {
+                    printf("error sending message\n");
+                    exit(1);
+                }
                 continue;
             }
             
@@ -186,7 +190,7 @@ int main (int argc, char * argv[] )
             {
                 if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
                 {
-                    printf("error receiving message");
+                    printf("error receiving message\n");
                     exit(1);
                 }
                 else if (strcmp(received, "-1") == 0)
@@ -195,6 +199,7 @@ int main (int argc, char * argv[] )
                 }
                 write(file, received, sizeof(received));
             }
+            printf("Successfully wrote %s\n", filename);
             close(file);
         }
         
@@ -214,8 +219,14 @@ int main (int argc, char * argv[] )
                 strcat(msg, filename);
             }
             
-            nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
+            if (sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            {
+                printf("error sending message\n");
+                exit(1);
+            }
+            printf("Successfully deleted %s\n", filename);
         }
+        
         printf("\n");
 
 
