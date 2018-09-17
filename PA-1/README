@@ -1,0 +1,18 @@
+Simple udp client/server program
+
+How to run
+
+On client machine:
+cd client/
+make
+./client <server ip> <port>
+
+On server:
+cd server/
+make
+./server <port>
+
+**note ports must match**
+
+Once inside the client application, the program will supply a menu and instructions
+
