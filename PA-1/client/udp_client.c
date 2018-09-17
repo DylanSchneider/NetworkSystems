@@ -115,7 +115,7 @@ int main (int argc, char * argv[])
                 exit(1);
             }
             printf("%s\n", received);
-            printf("Exiting client\n")
+            printf("Exiting client\n");
             close(sock);
             exit(0);
         }
