@@ -100,6 +100,7 @@ int main (int argc, char * argv[])
                     received[i] = '\0';
                 }*/
             }
+            printf("\n");
         }
         
         else if (strcmp(menu_option, "exit") == 0)

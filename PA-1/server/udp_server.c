@@ -94,7 +94,7 @@ int main (int argc, char * argv[] )
                 printf("error sending message");
                 exit(1);
             }
-            printf("sent ls\n");
+            printf("successfully sent ls\n");
         }
         
         else if (strcmp(buffer, "exit") == 0)
