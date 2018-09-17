@@ -105,7 +105,7 @@ int main (int argc, char * argv[] )
                 printf("error sending message");
                 exit(1);
             }
-            printf("exiting...");
+            printf("exiting...\n");
             close(sock);
             exit(0);
         }
