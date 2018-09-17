@@ -95,9 +95,10 @@ int main (int argc, char * argv[])
                     break;
                 }
                 printf("%s", received);
-                for (int i=0; i<MAXBUFSIZE; i++) {
+                memset(received, 0, MAXBUFSIZE);
+                /*for (int i=0; i<MAXBUFSIZE; i++) {
                     received[i] = '\0';
-                }
+                }*/
             }
         }
         
@@ -114,6 +115,7 @@ int main (int argc, char * argv[])
                 exit(1);
             }
             printf("%s\n", received);
+            printf("Exiting client\n")
             close(sock);
             exit(0);
         }

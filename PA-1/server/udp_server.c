@@ -59,7 +59,7 @@ int main (int argc, char * argv[] )
         exit(1);
 	}
     
-    printf("Started server on port %s\n", argv[1]);
+    printf("Started server on port %s\n\n", argv[1]);
 
 	remote_size = sizeof(remote);
 	
@@ -81,17 +81,31 @@ int main (int argc, char * argv[] )
             }
             
             while (fgets(output, sizeof(output)-1, fp) != NULL) {
-                nbytes = sendto(sock, output, sizeof(output), 0, (struct sockaddr*) &remote, remote_size);
+                if (sendto(sock, output, sizeof(output), 0, (struct sockaddr*) &remote, remote_size) == -1)
+                {
+                    printf("error sending message");
+                    exit(1);
+                }
             }
+            // send eof message
             char msg[] = "-1";
-            nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
-            
+            if (sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            {
+                printf("error sending message");
+                exit(1);
+            }
+            printf("sent ls\n");
         }
         
         else if (strcmp(buffer, "exit") == 0)
         {
             char msg[] = "Exiting server...";
-            nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
+            if (sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            {
+                printf("error sending message");
+                exit(1);
+            }
+            printf("exiting...");
             close(sock);
             exit(0);
         }
