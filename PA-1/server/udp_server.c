@@ -72,7 +72,7 @@ int main (int argc, char * argv[] )
         if (strcmp(buffer, "ls") == 0)
         {
             FILE *fp;
-            char output[1035];
+            char output[1000];
             
             if ((fp = popen("/bin/ls", "r")) == NULL)
             {
@@ -99,7 +99,7 @@ int main (int argc, char * argv[] )
         
         else if (strcmp(buffer, "exit") == 0)
         {
-            char msg[] = "Exiting server...";
+            char msg[] = "Exiting server";
             if (sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message");
@@ -124,25 +124,41 @@ int main (int argc, char * argv[] )
                 strcpy(begin_msg, "Unable to open ");
                 strcat(begin_msg, filename);
                 printf("Unable to open %s, moving on.\n", filename);
-                nbytes = sendto(sock, begin_msg, sizeof(begin_msg), 0, (struct sockaddr*) &remote, remote_size);
+                if (sendto(sock, begin_msg, sizeof(begin_msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
+                {
+                    printf("error sending message");
+                    exit(1);
+                }
                 continue;
             }
             else{
                 strcpy(begin_msg, "Successfully opened ");
                 strcat(begin_msg, filename);
                 printf("Successfully opened %s, sending...\n", filename);
-                nbytes = sendto(sock, begin_msg, sizeof(begin_msg), 0, (struct sockaddr*) &remote, remote_size);
+                if (sendto(sock, begin_msg, sizeof(begin_msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
+                {
+                    printf("error sending message");
+                    exit(1);
+                }
             }
             
             
             char buf[MAXBUFSIZE];
             while ((bytes = read(file, buf, MAXBUFSIZE)) > 0)
             {
-                sendto(sock, buf, bytes, 0, (struct sockaddr*) &remote, remote_size);
+                if (sendto(sock, buf, bytes, 0, (struct sockaddr*) &remote, remote_size) == -1)
+                {
+                    printf("error sending message");
+                    exit(1);
+                }
                 printf("\tSent %d bytes\n", bytes);
             }
             char eof_msg[] = "-1";
-            nbytes = sendto(sock, eof_msg, sizeof(eof_msg), 0, (struct sockaddr*) &remote, remote_size);
+            if (sendto(sock, eof_msg, sizeof(eof_msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            {
+                printf("error sending message");
+                exit(1);
+            }
             
             printf("Done sending %s\n", filename);
             close(file);

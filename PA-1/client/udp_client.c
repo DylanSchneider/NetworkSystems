@@ -174,7 +174,6 @@ int main (int argc, char * argv[])
                 write(file, received, sizeof(received));
             }
             close(file);
-            
         }
         
         else if (strstr(menu_option, "put ") != NULL)
