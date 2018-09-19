@@ -189,7 +189,7 @@ int main (int argc, char * argv[] )
             int bytes;
             for (;;)
             {
-                if (bytes = recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
+                if (bytes = recvfrom(sock, received, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size) == -1)
                 {
                     printf("error receiving message\n");
                     exit(1);
