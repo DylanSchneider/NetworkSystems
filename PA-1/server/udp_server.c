@@ -72,7 +72,7 @@ int main (int argc, char * argv[] )
         if (strcmp(buffer, "ls") == 0)
         {
             FILE *fp;
-            char output[1000];
+            char output[MAXBUFSIZE];
             
             if ((fp = popen("/bin/ls", "r")) == NULL)
             {
@@ -186,10 +186,9 @@ int main (int argc, char * argv[] )
             }
             
             char received[MAXBUFSIZE];
-            int bytes;
             for (;;)
             {
-                if (bytes = recvfrom(sock, received, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size) == -1)
+                if (nbytes = recvfrom(sock, received, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size) == -1)
                 {
                     printf("error receiving message\n");
                     exit(1);
