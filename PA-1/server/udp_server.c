@@ -189,7 +189,7 @@ int main (int argc, char * argv[] )
             char received[MAXBUFSIZE];
             while (1)
             {
-                nbytes = recvfrom(sock, received, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size) != -1);
+                nbytes = recvfrom(sock, received, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size);
                 printf("bytes Recvd = %d\n", nbytes);
                 if (nbytes == -1)
                 {
