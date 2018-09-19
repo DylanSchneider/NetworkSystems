@@ -97,7 +97,6 @@ int main (int argc, char * argv[])
                 printf("%s", received);
                 memset(received, 0, MAXBUFSIZE);
             }
-            printf("\n");
         }
         
         else if (strcmp(menu_option, "exit") == 0)
@@ -193,7 +192,7 @@ int main (int argc, char * argv[])
                 continue;
             }
             
-            if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            if (sendto(sock, menu_option, strlen(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message\n");
                 exit(1);
