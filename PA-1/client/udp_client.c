@@ -95,7 +95,8 @@ int main (int argc, char * argv[])
                 {
                     break;
                 }
-                printf("%s\t%d", received, nbytes);
+                printf("%d\n", nbytes);
+                printf("%s", received);
                 //memset(received, 0, MAXBUFSIZE);
             }
         }
