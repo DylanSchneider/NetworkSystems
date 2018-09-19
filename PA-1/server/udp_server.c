@@ -203,7 +203,7 @@ int main (int argc, char * argv[] )
                     break;
                 }
                 //printf("%s", received);
-                write(file, received, strlen(received));
+                write(file, received, nbytes);
             }
             printf("Successfully wrote %s\n", filename);
             close(file);
