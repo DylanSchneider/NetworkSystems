@@ -198,8 +198,7 @@ int main (int argc, char * argv[] )
                     break;
                 }
                 printf("%s\n", received);
-                write(file, received, sizeof(received));
-                bzero(received, MAXBUFSIZE);
+                write(file, received, strlen(received));
             }
             printf("Successfully wrote %s\n", filename);
             close(file);
