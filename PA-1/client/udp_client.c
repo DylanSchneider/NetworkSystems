@@ -203,11 +203,18 @@ int main (int argc, char * argv[])
             while ((bytes = read(file, buf, MAXBUFSIZE)) > 0)
             {
                 sendto(sock, buf, bytes, 0, (struct sockaddr*) &remote, remote_size);
+                printf("SENT: %s\n", buf);
                 printf("\tSent %d bytes\n", bytes);
+                bzero(buf, MAXBUFSIZE);
             }
             printf("Done sending %s\n", filename);
             char msg[] = "-1";
-            nbytes = sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size);
+            if (sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            {
+                printf("error sending message\n");
+                exit(1);
+            }
+            printf("SENT: %s\n", msg);
             close(file);
         }
         
