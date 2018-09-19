@@ -66,6 +66,7 @@ int main (int argc, char * argv[] )
 	for(;;) {
 		bzero(buffer,sizeof(buffer));
 		nbytes = recvfrom(sock, buffer, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size);
+        printf("received begin msg with size of: %d\n", nbytes);
 
 		printf("The client says %s\n", buffer);
         
