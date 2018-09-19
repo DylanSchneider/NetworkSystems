@@ -13,6 +13,9 @@
 #include <errno.h>
 
 #define MAXBUFSIZE 100
+#define PROMPT "> "
+#define eof "-1"
+
 
 void print_menu();
 
@@ -53,17 +56,14 @@ int main (int argc, char * argv[])
     printf("Client started with connection to %s on port %s\n", argv[1], argv[2]);
     print_menu();
     for (;;) {
+        //bzero(received, sizeof(received));
         
-        for (int i=0; i<MAXBUFSIZE; i++) {
-            received[i] = '\0';
-        }
-        
-        printf("> ");
-        //scanf(" %c[^\n]", menu_option);
+        printf(PROMPT);
         fgets(menu_option, MAXBUFSIZE, stdin);
+        
         if ((strlen(menu_option) > 0) && (menu_option[strlen(menu_option) - 1] == '\n'))
         {
-            menu_option[strlen (menu_option) - 1] = '\0';
+            menu_option[strlen(menu_option) - 1] = '\0';
         }
         
         if (strlen(menu_option) == 0)
@@ -77,31 +77,32 @@ int main (int argc, char * argv[])
         
         else if (strcmp(menu_option, "ls") == 0)
         {
-            if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            if (sendto(sock, menu_option, strlen(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message\n");
                 exit(1);
             }
             for (;;)
             {
-                if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
+                nbytes = recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size);
+                if (nbytes == -1)
                 {
                     printf("error receiving message\n");
                     exit(1);
                 }
                 
-                if (strcmp(received, "-1") == 0)
+                if (strcmp(received, eof) == 0)
                 {
                     break;
                 }
-                printf("%s", received);
-                memset(received, 0, MAXBUFSIZE);
+                printf("%s\t%d", received, nbytes);
+                //memset(received, 0, MAXBUFSIZE);
             }
         }
         
         else if (strcmp(menu_option, "exit") == 0)
         {
-            if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            if (sendto(sock, menu_option, strlen(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message\n");
                 exit(1);
@@ -129,7 +130,7 @@ int main (int argc, char * argv[])
                 continue;
             }
             
-            if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            if (sendto(sock, menu_option, strlen(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message\n");
                 exit(1);
@@ -230,7 +231,7 @@ int main (int argc, char * argv[])
                 continue;
             }
             
-            if (sendto(sock, menu_option, sizeof(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            if (sendto(sock, menu_option, strlen(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message\n");
                 exit(1);
