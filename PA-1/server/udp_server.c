@@ -186,19 +186,14 @@ int main (int argc, char * argv[] )
             }
             
             char received[MAXBUFSIZE];
-            for (;;)
+            while (nbytes = recvfrom(sock, received, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size) != -1)
             {
-                if (nbytes = recvfrom(sock, received, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size) == -1)
-                {
-                    printf("error receiving message\n");
-                    exit(1);
-                }
-                else if (strcmp(received, "-1") == 0)
+                if (strcmp(received, "-1") == 0)
                 {
                     break;
                 }
                 printf("%d", nbytes);
-                write(file, received, strlen(received));
+                write(file, received, nbytes);
             }
             printf("Successfully wrote %s\n", filename);
             close(file);
