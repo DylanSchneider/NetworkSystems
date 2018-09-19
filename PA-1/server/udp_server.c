@@ -199,7 +199,7 @@ int main (int argc, char * argv[] )
                     break;
                 }
                 printf("%d", bytes);
-                write(file, received, bytes);
+                write(file, received, strlen(received));
             }
             printf("Successfully wrote %s\n", filename);
             close(file);
