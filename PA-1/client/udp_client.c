@@ -202,9 +202,11 @@ int main (int argc, char * argv[])
             char buf[MAXBUFSIZE];
             while ((bytes = read(file, buf, MAXBUFSIZE)) > 0)
             {
-                sendto(sock, buf, bytes, 0, (struct sockaddr*) &remote, remote_size);
-                printf("SENT: %s\n", buf);
-                printf("\tSent %d bytes\n", bytes);
+                if (sendto(sock, buf, bytes, 0, (struct sockaddr*) &remote, remote_size) == -1)
+                {
+                    printf("error sending message\n");
+                    exit(1);
+                }
                 bzero(buf, MAXBUFSIZE);
             }
             printf("Done sending %s\n", filename);
@@ -214,7 +216,6 @@ int main (int argc, char * argv[])
                 printf("error sending message\n");
                 exit(1);
             }
-            printf("SENT: %s\n", msg);
             close(file);
         }
         
