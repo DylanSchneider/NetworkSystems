@@ -186,6 +186,7 @@ int main (int argc, char * argv[] )
             }
             
             char received[MAXBUFSIZE];
+            int bytes;
             for (;;)
             {
                 if (bytes = recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
