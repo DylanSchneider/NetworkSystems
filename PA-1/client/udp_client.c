@@ -95,9 +95,8 @@ int main (int argc, char * argv[])
                 {
                     break;
                 }
-                printf("%d\n", nbytes);
                 printf("%s", received);
-                //memset(received, 0, MAXBUFSIZE);
+                memset(received, 0, MAXBUFSIZE);
             }
         }
         
@@ -160,17 +159,19 @@ int main (int argc, char * argv[])
             }
             for (;;)
             {
-                if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
+                nbytes = recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size);
+                if (nbytes == -1)
                 {
                     printf("error receiving message\n");
                     exit(1);
                 }
-                else if (strcmp(received, "-1") == 0)
+                else if (strcmp(received, eof) == 0)
                 {
                     break;
                 }
-                write(file, received, sizeof(received));
+                write(file, received, nbytes);
             }
+            printf("Successfully wrote %s\n", filename);
             close(file);
         }
         
@@ -211,7 +212,7 @@ int main (int argc, char * argv[])
                 bzero(buf, MAXBUFSIZE);
             }
             printf("Done sending %s\n", filename);
-            char msg[] = "-1";
+            char msg[] = eof;
             if (sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message\n");

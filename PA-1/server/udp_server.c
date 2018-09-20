@@ -95,7 +95,7 @@ int main (int argc, char * argv[] )
                     exit(1);
                 }
             }
-            // send eof message
+            // send eof message to stop receiving
             char msg[] = eof;
             if (sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
@@ -113,7 +113,7 @@ int main (int argc, char * argv[] )
                 printf("error sending message\n");
                 exit(1);
             }
-            printf("exiting...\n");
+            printf("Exiting\n");
             close(sock);
             exit(0);
         }
@@ -150,7 +150,6 @@ int main (int argc, char * argv[] )
                 }
             }
             
-            
             char buf[MAXBUFSIZE];
             while ((bytes = read(file, buf, MAXBUFSIZE)) > 0)
             {
@@ -161,7 +160,7 @@ int main (int argc, char * argv[] )
                 }
                 printf("\tSent %d bytes\n", bytes);
             }
-            char eof_msg[] = "-1";
+            char eof_msg[] = eof;
             if (sendto(sock, eof_msg, sizeof(eof_msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message\n");
@@ -204,11 +203,10 @@ int main (int argc, char * argv[] )
                     exit(1);
                 }
             
-                if (strcmp(received, "-1") == 0)
+                if (strcmp(received, eof) == 0)
                 {
                     break;
                 }
-                //printf("%s", received);
                 write(file, received, nbytes);
             }
             printf("Successfully wrote %s\n", filename);
