@@ -67,7 +67,7 @@ int main (int argc, char * argv[] )
 	for(;;)
     {
 		bzero(buffer,sizeof(buffer));
-		nbytes = recvfrom(sock, buffer, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size);
+		rbytes = recvfrom(sock, buffer, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size);
         if (nbytes == -1)
         {
             printf("error receiving message\n");
