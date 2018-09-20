@@ -15,6 +15,7 @@
 /* You will have to modify the program below */
 
 #define MAXBUFSIZE 100
+#define eof "-1"
 
 int main (int argc, char * argv[] )
 {
@@ -67,8 +68,13 @@ int main (int argc, char * argv[] )
     {
 		bzero(buffer,sizeof(buffer));
 		nbytes = recvfrom(sock, buffer, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size);
+        if (nbytes == -1)
+        {
+            printf("error receiving message\n");
+            exit(1);
+        }
+        
         printf("received begin msg with size of: %d\n", nbytes);
-
 		printf("The client says %s\n", buffer);
         
         if (strcmp(buffer, "ls") == 0)
@@ -82,15 +88,15 @@ int main (int argc, char * argv[] )
                 exit(1);
             }
             
-            while (fgets(output, sizeof(output)-1, fp) != NULL) {
-                if (sendto(sock, output, sizeof(output), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            while (fgets(output, MAXBUFSIZE, fp) != NULL) {
+                if (sendto(sock, output, strlen(output), 0, (struct sockaddr*) &remote, remote_size) == -1)
                 {
                     printf("error sending message\n");
                     exit(1);
                 }
             }
             // send eof message
-            char msg[] = "-1";
+            char msg[] = eof;
             if (sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
             {
                 printf("error sending message\n");
@@ -196,7 +202,6 @@ int main (int argc, char * argv[] )
                 {
                     printf("error receiving message\n");
                     exit(1);
-
                 }
             
                 if (strcmp(received, "-1") == 0)
