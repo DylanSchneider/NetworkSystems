@@ -66,7 +66,7 @@ int main (int argc, char * argv[] )
     {
 		//bzero(buffer,sizeof(buffer));
 		receive_bytes = recvfrom(sock, buffer, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size);
-        if (rbytes == -1)
+        if (receive_bytes == -1)
         {
             printf("error receiving message\n");
             exit(1);
@@ -167,7 +167,7 @@ int main (int argc, char * argv[] )
 #ifdef DEBUG
                 printf("%s: read %d bytes\n", cmd, read_bytes);
 #endif
-                send_bytes = sendto(sock, buf, bytes, 0, (struct sockaddr*) &remote, remote_size);
+                send_bytes = sendto(sock, buf, read_bytes, 0, (struct sockaddr*) &remote, remote_size);
                 if (send_bytes == -1)
                 {
                     printf("error sending message\n");
@@ -232,7 +232,7 @@ int main (int argc, char * argv[] )
                 {
                     break;
                 }
-                write_bytes = write(file, received, nbytes);
+                write_bytes = write(file, received, receive_bytes);
 #ifdef DEBUG
                 printf("wrote %d bytes to %s\n", write_bytes, filename);
 #endif
