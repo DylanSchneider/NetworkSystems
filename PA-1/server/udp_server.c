@@ -12,19 +12,19 @@
 #include <stdlib.h>
 #include <memory.h>
 #include <string.h>
-/* You will have to modify the program below */
 
 #define MAXBUFSIZE 100
 #define eof "-1"
 
+// Uncomment for debugging:
+// #define DEBUG
+
 int main (int argc, char * argv[] )
 {
-
-
 	int sock;                           //This will be our socket
 	struct sockaddr_in sin, remote;     //"Internet socket address structure"
-	socklen_t remote_size;         //length of the sockaddr_in structure
-	int nbytes;                        //number of bytes we receive in our message
+    socklen_t remote_size = sizeof(remote); //length of the sockaddr_in structure
+	int sbytes, rbytes;                        //number of bytes we receive in our message
 	char buffer[MAXBUFSIZE];             //a buffer to store our received message
 	if (argc != 2)
 	{
@@ -62,7 +62,7 @@ int main (int argc, char * argv[] )
     
     printf("Started server on port %s\n\n", argv[1]);
 
-	remote_size = sizeof(remote);
+	
 	
 	for(;;)
     {
