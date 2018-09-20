@@ -107,12 +107,6 @@ int main (int argc, char * argv[] )
         
         else if (strcmp(buffer, "exit") == 0)
         {
-            char msg[] = "Exiting server";
-            if (sendto(sock, msg, sizeof(msg), 0, (struct sockaddr*) &remote, remote_size) == -1)
-            {
-                printf("error sending message\n");
-                exit(1);
-            }
             printf("Exiting\n");
             close(sock);
             exit(0);

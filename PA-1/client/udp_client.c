@@ -28,7 +28,8 @@ int main (int argc, char * argv[])
     struct sockaddr_in remote;              //"Internet socket address structure"
     socklen_t remote_size = sizeof(remote);
     
-    int sbytes, rbytes;                     // bytes for sending and receiving
+    int file;
+    int send_bytes, receive_bytes, read_bytes, write_bytes ; // bytes for sending, receiving, reading and writing
 	char buffer[MAXBUFSIZE];
     char menu_option[MAXBUFSIZE];
     char received[MAXBUFSIZE];
@@ -81,19 +82,19 @@ int main (int argc, char * argv[])
         
         else if (strcmp(menu_option, "ls") == 0)
         {
-            sbytes = sendto(sock, menu_option, strlen(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1);
-            if (sbytes == -1)
+            send_bytes = sendto(sock, menu_option, strlen(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1;
+            if (send_bytes == -1)
             {
                 printf("error sending message\n");
                 exit(1);
             }
 #ifdef DEBUG
-            printf("sent %d bytes\n", sbytes);
+            printf("%s: sent %d bytes\n", menu _option, send_bytes);
 #endif
             for (;;)
             {
-                rbytes = recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size);
-                if (rbytes == -1)
+                receive_bytes = recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size);
+                if (receive_bytes == -1)
                 {
                     printf("error receiving message\n");
                     exit(1);
@@ -104,7 +105,7 @@ int main (int argc, char * argv[])
                     break;
                 }
 #ifdef DEBUG
-                printf("received %d bytes\n", rbytes);
+                printf("%s: received %d bytes\n", menu_option, receive_bytes);
 #endif
                 printf("%s", received);
                 memset(received, 0, MAXBUFSIZE);
@@ -113,19 +114,16 @@ int main (int argc, char * argv[])
         
         else if (strcmp(menu_option, "exit") == 0)
         {
-            sbytes = sendto(sock, menu_option, strlen(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1);
-            if (sbytes == -1)
+            send_bytes = sendto(sock, menu_option, strlen(menu_option), 0, (struct sockaddr*) &remote, remote_size);
+            if (send_bytes == -1)
             {
                 printf("error sending message\n");
                 exit(1);
             }
-            rbytes = recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1);
-            if (rbytes == -1)
-            {
-                printf("error receiving message\n");
-                exit(1);
-            }
-            printf("%s\n", received);
+#ifdef DEBUG
+            printf("%s: sent %d bytes\n", menu_option, send_bytes);
+#endif
+            printf("Exiting server\n");
             printf("Exiting client\n");
             close(sock);
             exit(0);
@@ -143,16 +141,25 @@ int main (int argc, char * argv[])
                 continue;
             }
             
-            if (sendto(sock, menu_option, strlen(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            send_bytes = sendto(sock, menu_option, strlen(menu_option), 0, (struct sockaddr*) &remote, remote_size);
+            if (send_bytes == -1)
             {
                 printf("error sending message\n");
                 exit(1);
             }
-            if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
+#ifdef DEBUG
+            printf("%s: sent %d bytes\n", cmd, send_bytes);
+#endif
+            
+            receive_bytes = recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size);
+            if (receive_bytes == -1)
             {
                 printf("error receiving message\n");
                 exit(1);
             }
+#ifdef DEBUG
+            printf("%s: received %d bytes\n", cmd, receive_bytes);
+#endif
             printf("%s\n", received);
             
             char err_received[MAXBUFSIZE];
@@ -172,17 +179,23 @@ int main (int argc, char * argv[])
             }
             for (;;)
             {
-                rbytes = recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size);
-                if (rbytes == -1)
+                receive_bytes = recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size);
+                if (receive_bytes == -1)
                 {
                     printf("error receiving message\n");
                     exit(1);
                 }
-                else if (strcmp(received, eof) == 0)
+#ifdef DEBUG
+                printf("%s: received %d bytes\n", cmd, receive_bytes);
+#endif
+                if (strcmp(received, eof) == 0)
                 {
                     break;
                 }
-                write(file, received, rbytes);
+                write_bytes = write(file, received, receive_bytes);
+#ifdef DEBUG
+                printf("wrote %d bytes to %s\n", write_bytes, filename);
+#endif
             }
             printf("Successfully wrote %s\n", filename);
             close(file);
@@ -200,28 +213,34 @@ int main (int argc, char * argv[])
                 continue;
             }
             
-            int file;
-            int bytes;
             if ((file = open(filename, O_RDONLY)) < 0)
             {
                 printf("Unable to open %s\n", filename);
                 continue;
             }
             printf("Successfully opened %s\n", filename);
-            if (sendto(sock, menu_option, strlen(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            send_bytes = sendto(sock, menu_option, strlen(menu_option), 0, (struct sockaddr*) &remote, remote_size);
+            if (send_bytes == -1)
             {
                 printf("error sending message\n");
                 exit(1);
             }
             
             char buf[MAXBUFSIZE];
-            while ((bytes = read(file, buf, MAXBUFSIZE)) > 0)
+            while ((read_bytes = read(file, buf, MAXBUFSIZE)) > 0)
             {
-                if (sendto(sock, buf, bytes, 0, (struct sockaddr*) &remote, remote_size) == -1)
+#ifdef DEBUG
+                printf("%s: read %d bytes\n", cmd, read_bytes);
+#endif
+                send_bytes = sendto(sock, buf, read_bytes, 0, (struct sockaddr*) &remote, remote_size);
+                if (send_bytes == -1)
                 {
                     printf("error sending message\n");
                     exit(1);
                 }
+#ifdef DEBUG
+                printf("%s: sent %d bytes\n", cmd, send_bytes);
+#endif
                 bzero(buf, MAXBUFSIZE);
             }
             printf("Done sending %s\n", filename);
@@ -231,6 +250,9 @@ int main (int argc, char * argv[])
                 printf("error sending message\n");
                 exit(1);
             }
+#ifdef DEBUG
+            printf("%s: sent %d bytes\n", cmd, send_bytes);
+#endif
             close(file);
         }
         
@@ -246,16 +268,24 @@ int main (int argc, char * argv[])
                 continue;
             }
             
-            if (sendto(sock, menu_option, strlen(menu_option), 0, (struct sockaddr*) &remote, remote_size) == -1)
+            send_bytes = sendto(sock, menu_option, strlen(menu_option), 0, (struct sockaddr*) &remote, remote_size);
+            if (send_bytes == -1)
             {
                 printf("error sending message\n");
                 exit(1);
             }
-            if (recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size) == -1)
+#ifdef DEBUG
+            printf("%s: sent %d bytes\n", cmd, send_bytes);
+#endif
+            receive_bytes = recvfrom(sock, received, sizeof(received), 0, (struct sockaddr*) &remote, &remote_size);
+            if (receive_bytes == -1)
             {
                 printf("error receiving message\n");
                 exit(1);
             }
+#ifdef DEBUG
+            printf("%s: received %d bytes\n", cmd, receive_bytes);
+#endif
             printf("%s\n", received);
         }
         else {
