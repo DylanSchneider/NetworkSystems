@@ -89,7 +89,7 @@ int main (int argc, char * argv[])
                 exit(1);
             }
 #ifdef DEBUG
-            printf("%s: sent %d bytes\n", menu _option, send_bytes);
+            printf("sent begin msg with size of %d bytes\n", send_bytes);
 #endif
             for (;;)
             {
@@ -225,14 +225,16 @@ int main (int argc, char * argv[])
                 printf("error sending message\n");
                 exit(1);
             }
+#ifdef DEBUG
+            printf("%s: sent %d bytes\n", cmd, send_bytes);
+#endif
             
-            char buf[MAXBUFSIZE];
-            while ((read_bytes = read(file, buf, MAXBUFSIZE)) > 0)
+            while ((read_bytes = read(file, buffer, MAXBUFSIZE)) > 0)
             {
 #ifdef DEBUG
                 printf("%s: read %d bytes\n", cmd, read_bytes);
 #endif
-                send_bytes = sendto(sock, buf, read_bytes, 0, (struct sockaddr*) &remote, remote_size);
+                send_bytes = sendto(sock, buffer, read_bytes, 0, (struct sockaddr*) &remote, remote_size);
                 if (send_bytes == -1)
                 {
                     printf("error sending message\n");
@@ -241,7 +243,7 @@ int main (int argc, char * argv[])
 #ifdef DEBUG
                 printf("%s: sent %d bytes\n", cmd, send_bytes);
 #endif
-                bzero(buf, MAXBUFSIZE);
+                bzero(buffer, MAXBUFSIZE);
             }
             printf("Done sending %s\n", filename);
             char msg[] = eof;
