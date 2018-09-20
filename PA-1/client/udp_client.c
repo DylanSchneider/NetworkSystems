@@ -61,7 +61,7 @@ int main (int argc, char * argv[])
     
     for (;;)
     {
-        //bzero(received, sizeof(received));
+        bzero(menu_option, sizeof(menu_option));
         
         printf(PROMPT);
         fgets(menu_option, MAXBUFSIZE, stdin);

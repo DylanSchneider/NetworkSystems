@@ -64,7 +64,7 @@ int main (int argc, char * argv[] )
 
 	for(;;)
     {
-		//bzero(buffer,sizeof(buffer));
+		bzero(buffer,sizeof(buffer));
 		receive_bytes = recvfrom(sock, buffer, MAXBUFSIZE, 0, (struct sockaddr*) &remote, &remote_size);
         if (receive_bytes == -1)
         {
