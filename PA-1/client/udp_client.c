@@ -26,7 +26,7 @@ int main (int argc, char * argv[])
 
 	int sock;                               //this will be our socket
     struct sockaddr_in remote;              //"Internet socket address structure"
-    socklen_t remote_size = sizeof(remote);
+    socklen_t remote_size = sizeof(remote);     //length of the sockaddr_in structure
     
     int file;
     int send_bytes, receive_bytes, read_bytes, write_bytes ; // bytes for sending, receiving, reading and writing
