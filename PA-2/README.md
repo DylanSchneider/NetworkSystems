@@ -4,8 +4,8 @@
 
 How to run
 
-make
-./webserver <port> <document root>
+make \
+./webserver \<port\> \<document root\> \
 
 The webserver will run continuously on localhost until it is given ctrl-c, or the process is killed. \
 Use `telnet` (or `nc` on Mac) to send requests to server. \
