@@ -1,9 +1,8 @@
-*Simple web server program*
+# Simple web server program
 * handles GET and POST requests
 * implements pipelining with a 10 second timeout
 
-How to run
-
+## How to run
 make \
 ./webserver \<port\> \<document root\> \
 
