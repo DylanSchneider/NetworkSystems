@@ -168,10 +168,10 @@ void connection_handler(int conn_fd, std::string doc_root){
         
         std::string response_str;
         if(keep_alive) {
-            response_str = version + " 200  Document Follows\r\n" + ctime(&tt) + "Content-Type: " + content_type + "\r\nContent-Length: " + content_len + "\r\nConnection: Keep-alive\r\n\r\n" + file_str + "\n";
+            response_str = version + " 200 Document Follows\r\n" + ctime(&tt) + "Content-Type: " + content_type + "\r\nContent-Length: " + content_len + "\r\nConnection: Keep-alive\r\n\r\n" + file_str + "\n";
         }
         else {
-            response_str = version + " 200  Document Follows\r\n" + ctime(&tt) + "Content-Type: " + content_type + "\r\nContent-Length: " + content_len + "\r\n\r\n" + file_str + "\n";
+            response_str = version + " 200 Document Follows\r\n" + ctime(&tt) + "Content-Type: " + content_type + "\r\nContent-Length: " + content_len + "\r\n\r\n" + file_str + "\n";
         }
        	
         int bytes = write(conn_fd, response_str.c_str(), response_str.length()*sizeof(char));
