@@ -40,9 +40,6 @@ int get(int conn_fd, std::string version, std::string filepath, bool keep_alive)
     
     // read file
     std::ifstream file_to_send(filepath);
-    if(file_to_send.fail()) {
-        std::cout << "simething wrong" << std::endl;
-    }
     if(!file_to_send) {
         std::string err_body = "<html><body text='red'>404 Not Found Reason URL does not exist: " + filepath + "<body></html>";
         std::string not_found = version + " 404 Not Found\r\nContent-Type: text/html\r\nContent-Length:  " + std::to_string(err_body.length()) + "\r\n\r\n" + err_body;
