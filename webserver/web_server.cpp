@@ -204,7 +204,6 @@ void connection_handler(int conn_fd, std::string doc_root){
         std::getline(recv_data, connection_line);
         std::string conn = connection_line.substr(connection_line.find(" ") + 1);
         bool keep_alive = false;
-        std::cout << "CONN: " << conn << std::endl;
         if(conn == "Keep-alive\r") {
 			std::cout << "Connection: Keep-alive" << std::endl;
             keep_alive = true;
@@ -224,12 +223,6 @@ void connection_handler(int conn_fd, std::string doc_root){
             request_cleanup(conn_fd);
             return;
         }
-        
-        /*
-        std::cout << "CMD:" << cmd << std::endl;
-        std::cout << "URI:" <<uri << std::endl;
-        std::cout << "Version:" <<version << std::endl;
-        */
         
         if(doc_root.back() == '/') {
             doc_root.erase(doc_root.size()-1);
