@@ -12,6 +12,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <stdio.h>
+#include <csignal>
 
 // progrma specifics
 #define USAGE "./webserver <port> </path/to/doc root>"
@@ -25,10 +26,23 @@
 #define JPG_TEXT "image/jpg"
 #define CSS_TEXT "text/css"
 #define JS_TEXT "application/javascript"
+int sock_fd = -1;
+bool exit_requested = false;
+
+void signal_handler(int signum) {
+    std::cout << "Received signal, closing socket and exiting." << std::endl;
+    exit_requested = true;
+    if (sock_fd != -1){
+        if (close(sock_fd) < 0){
+            std::cout << "error closing socket" << std::endl;
+        }
+    }
+    exit(1);
+}
 
 void request_cleanup(int conn_fd) {
     if (close(conn_fd) < 0) {
-        std::cout << "error closing connection socket" << std::endl;
+        std::cout << "error closing connection" << std::endl;
         exit(1);
     }
     
@@ -270,6 +284,7 @@ void connection_handler(int conn_fd, std::string doc_root){
         }
         std::cout << std::endl;
     }
+    request_cleanup(conn_fd);
 }
 
 int main(int argc, char*argv[]) {
@@ -304,8 +319,10 @@ int main(int argc, char*argv[]) {
 	
 	// setup
     
+    signal(SIGINT, signal_handler);
+    
     struct sockaddr_in servaddr;
-    int sock_fd, conn_fd;
+    int conn_fd;
     
     sock_fd = socket(AF_INET, SOCK_STREAM, 0);
     
@@ -317,11 +334,12 @@ int main(int argc, char*argv[]) {
     listen(sock_fd, 128);
     
 	std::cout << "Started web server with:\n" << "host - localhost\n" << "port - "<< port << "\ndoc root - " << doc_root << std::endl << std::endl;
-    while(1) {
+    while(!exit_requested) {
         conn_fd = accept(sock_fd,(struct sockaddr*) NULL, NULL);
         std::thread server_worker(connection_handler, conn_fd, doc_root);
         server_worker.join();
     }
     close(sock_fd);
+    exit(0);
 }
 
