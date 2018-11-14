@@ -13,9 +13,10 @@
 #include <errno.h>
 #include <stdio.h>
 #include <csignal>
+#include <regex>
 
 // progrma specifics
-#define USAGE "./webserver <port> </path/to/doc root>"
+#define USAGE "./proxy <port> [<timeout>]"
 #define BUFSIZE 1028
 
 // text headers
@@ -26,6 +27,11 @@
 #define JPG_TEXT "image/jpg"
 #define CSS_TEXT "text/css"
 #define JS_TEXT "application/javascript"
+
+#define HOSTNAME_REGEX "^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$"
+
+#define BLACKLIST ".proxy-blacklist.txt"
+
 int sock_fd = -1;
 bool exit_requested = false;
 
@@ -117,52 +123,13 @@ int get(int conn_fd, std::string version, std::string filepath, bool keep_alive)
     return 0;
 }
 
-// write post data to filepath
-int post(int conn_fd, std::string version, std::string filepath, bool keep_alive, std::string post_data) {
+void connection_handler(int conn_fd, int timeout){
     
-    // read file
-    std::ifstream file_to_edit(filepath);
-    if(!file_to_edit) {
-        std::string err_body = "<html><body text='red'>404 Not Found Reason URL does not exist: " + filepath + "<body></html>";
-        std::string not_found = version + " 404 Not Found\r\nContent-Type: text/html\r\nContent-Length:  " + std::to_string(err_body.length()) + "\r\n\r\n" + err_body;
-        write(conn_fd, not_found.c_str(), not_found.length()*sizeof(char));
-        return 1;
+    if(timeout) {
+        struct timeval tv;
+        tv.tv_sec = timeout;
+        setsockopt(conn_fd, SOL_SOCKET, SO_RCVTIMEO, (const char *) &tv, sizeof(tv));
     }
-    
-    // only implemented for html files
-    std::string file_handle = filepath.substr(filepath.find_last_of(".")+1);
-    if(file_handle != "html"){
-        std::string err_body = "<html><body>501 Not Implemented File Type: \"" + file_handle + "\" </body></html>";
-        std::string content_type = version + " 501 Not Imeplemented Error\r\nContent-Type: text/html\r\nContent-Length: " + std::to_string(err_body.length()) + "\r\n\r\n" + err_body;
-        write(conn_fd, content_type.c_str(), content_type.length()*sizeof(char));
-        return 1;
-    }
-    
-    // write post data to top of new file
-    std::string tmpfile_name = "tmp.html";
-    std::ofstream tmpfile (tmpfile_name);
-    tmpfile << "<html>\n\t<body>\n\t\t<pre>\n\t\t\t<h1>\n\t\t\t\t" << post_data << "\n\t\t\t</h1>\n\t\t</pre>\n\t</body>\n</html>\n";
-    
-    std::string line;
-    while(getline(file_to_edit, line)) {
-        tmpfile << line + "\n";
-    }
-    tmpfile.close();
-    file_to_edit.close();
-    
-    // unlink original file, move tmpfile to orignal name
-    std::remove(filepath.c_str());
-    std::rename(tmpfile_name.c_str(), filepath.c_str());
-    
-    // send back contents of new file to client
-    int get_err = get(conn_fd, version, filepath, keep_alive);
-    if(get_err) {
-        return 2;
-    }
-    return 0;
-}
-
-void connection_handler(int conn_fd, std::string doc_root){
     
     while(1) {
         char read_buf[BUFSIZE];
@@ -185,39 +152,19 @@ void connection_handler(int conn_fd, std::string doc_root){
         // parse header
         std::stringstream recv_data(read_buf);
         
-        // request command line
+        // request line
         std::string req_line;
         std::getline(recv_data, req_line);
 		std::cout << "request: " << req_line << std::endl;
         std::stringstream elements(req_line);
+        
         std::string cmd, uri, version, pipeline;
         elements >> cmd;
         elements >> uri;
         elements >> version;
         
-        // host line
-        std::string host_line;
-        std::getline(recv_data, host_line);
-        std::string host = host_line.substr(host_line.find(" ") + 1);
-        
-        // connection line
-        std::string connection_line;
-        std::getline(recv_data, connection_line);
-        std::string conn = connection_line.substr(connection_line.find(" ") + 1);
-        bool keep_alive = false;
-        if(conn == "Keep-alive\r") {
-			std::cout << "Connection: Keep-alive" << std::endl;
-            keep_alive = true;
-        }
-        
-        if(keep_alive) {
-            struct timeval tv;
-            tv.tv_sec = 10;  // 10 sec timeout
-            setsockopt(conn_fd, SOL_SOCKET, SO_RCVTIMEO, (const char *) &tv, sizeof(tv));
-        }
-        
-        
-        if((cmd != "GET" and cmd != "POST") or (version != "HTTP/1.0" and version != "HTTP/1.1")){
+        // validate the command and version
+        if (cmd != "GET" or (version != "HTTP/1.0" and version != "HTTP/1.1")){
             std::string err_body = "<html><body>400 Bad Request</body></html>";
             std::string bad_req_out = "HTTP/1.1 400 Bad Request\r\nContent-Type: text/html\r\nContent-Length: " + std::to_string(err_body.length()) + "\r\n\r\n" + err_body;
             write(conn_fd, bad_req_out.c_str(), bad_req_out.length()*sizeof(char));
@@ -225,25 +172,30 @@ void connection_handler(int conn_fd, std::string doc_root){
             return;
         }
         
+        // validate Hostname
+        if (!std::regex_match(uri, std::regex(HOSTNAME_REGEX))) { // check if they gave us an IP address
+            std::cout << "URI given is not a valid Hostname" << std::endl;
+            return;
+        }
+        
+        
+        // cache check / blacklist check
+            // resolve to ip or get from cache
+            // add to cache if not in
+        
+        // check both hostname and IP in blacklist
+        
+        
+    
+            
+        
         /*
         std::cout << "CMD:" << cmd << std::endl;
         std::cout << "URI:" <<uri << std::endl;
-        std::cout << "Version:" <<version << std::endl;
+        std::cout << "Version:" << version << std::endl;
         */
         
-        if(doc_root.back() == '/') {
-            doc_root.erase(doc_root.size()-1);
-        }
-        
-        std::string filepath;
-        if(uri == "/") {
-            filepath = doc_root + "/index.html";
-        }
-        else {
-            filepath = doc_root + uri;
-        }
-        
-        if(cmd == "GET") {
+        if(cmd == "GET") { // skeleton for if we need to add more commands in the future
             int get_err = get(conn_fd, version, filepath, keep_alive);
             if(get_err) {
                 std::cout << "GET exited with error" << std::endl;
@@ -251,38 +203,6 @@ void connection_handler(int conn_fd, std::string doc_root){
                 return;
             }
         }
-        else if(cmd == "POST") {
-            // get the post contents
-            std::string blank_line;
-            std::getline(recv_data, blank_line); // should be blank
-            
-            std::string post_data;
-            std::string post_line;
-            while(std::getline(recv_data, post_line)) { // should be POST data
-                post_data += post_line + "\n";
-            }
-            
-            int post_err = post(conn_fd, version, filepath, keep_alive, post_data);
-            if(post_err) {
-                switch(post_err) {
-                    case 1:
-                        std::cout << "POST exited with error" << std::endl;
-                        break;
-                    case 2:
-                        std::cout << "POST exited while sending data back to client (GET error)" << std::endl;
-                        break;
-                }
-                request_cleanup(conn_fd);
-                return;
-            }
-            
-        }
-
-        if(!keep_alive) {
-        	request_cleanup(conn_fd);
-			return;
-        }
-        std::cout << std::endl;
     }
     request_cleanup(conn_fd);
 }
@@ -291,7 +211,7 @@ int main(int argc, char*argv[]) {
     
 	// arg parsing and error checking
 
-    if(argc != 3) {
+    if(argc != 2 and argc != 3) {
         std::cout << USAGE << std::endl;
         return 1;
     }
@@ -299,10 +219,11 @@ int main(int argc, char*argv[]) {
     int port;
     try {
         port = std::stoi(argv[1]);
+        
     }
     catch(std::exception& e)
     {
-        std::cout << e.what() << '\n';
+        std::cout << "<port> must be an integer" << '\n';
         return 1;
     }
     if(port <= 1024) {
@@ -310,11 +231,23 @@ int main(int argc, char*argv[]) {
         return 1;
     }
     
-    std::string doc_root = argv[2];
-    struct stat stat_buf;
-    if(stat(doc_root.c_str(), &stat_buf) != 0) {
-        std::cout << "'" << doc_root << "' does not exist." << std::endl;
-        return 1;
+    int timeout;
+    if (argc == 3) {
+        try {
+            timeout = std::stoi(argv[2]);
+        }
+        catch(std::exception& e)
+        {
+            std::cout << "<timeout> must be a positive integer" << '\n';
+            return 1;
+        }
+        if (timeout <= 0) {
+            std::cout << "<timeout> must be a positive integer" << '\n';
+            return 1;
+        }
+    }
+    else {
+        timeout = 0; // no timeout
     }
 	
 	// setup
@@ -323,7 +256,7 @@ int main(int argc, char*argv[]) {
     
     struct sockaddr_in servaddr;
     int conn_fd;
-    
+    /*
     sock_fd = socket(AF_INET, SOCK_STREAM, 0);
     
     servaddr.sin_family = AF_INET;
@@ -332,8 +265,15 @@ int main(int argc, char*argv[]) {
     
     bind(sock_fd,(struct sockaddr *) &servaddr, sizeof(servaddr));
     listen(sock_fd, 128);
+    */
+    if (timeout) {
+        std::cout << "Started proxy with:\n" << "host - localhost\n" << "port - "<< port << "\ntimeout - " << timeout << std::endl << std::endl;
+    }
+    else {
+        std::cout << "Started proxy with:\n" << "host - localhost\n" << "port - "<< port << std::endl << std::endl;
+    }
     
-	std::cout << "Started web server with:\n" << "host - localhost\n" << "port - "<< port << "\ndoc root - " << doc_root << std::endl << std::endl;
+    
     while(!exit_requested) {
         conn_fd = accept(sock_fd,(struct sockaddr*) NULL, NULL);
         std::thread server_worker(connection_handler, conn_fd, doc_root);
